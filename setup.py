@@ -7,7 +7,7 @@ from opps import ganalytics
 
 
 
-install_requires = ["opps"]
+install_requires = ["opps", "django-celery"]
 
 classifiers = ["Development Status :: 4 - Beta",
                "Intended Audience :: Developers",
@@ -25,7 +25,7 @@ except:
     long_description = ganalytics.__description__
 
 setup(name='opps-ganalytics',
-        namespace_packages=['opps', 'opps.ganalytics'],
+        namespace_packages=['opps.ganalytics'],
         version=ganalytics.__version__,
         description=ganalytics.__description__,
         long_description=long_description,
