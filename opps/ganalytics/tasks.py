@@ -32,7 +32,7 @@ def get_metadata():
         end_date = datetime.date(q.end_date.year,
                                  q.end_date.month,
                                  q.end_date.day)
-        metrics = ['pageviews','timeOnPage','entrances']
+        metrics = ['pageviews', 'timeOnPage', 'entrances']
         dimensions = ['pageTitle', 'pagePath']
         data = account.get_data(start_date, end_date, metrics=metrics,
                                 dimensions=dimensions, filters=filters,
