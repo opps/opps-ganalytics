@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 
-from .models import Filter, Query, QueuryFilter
+from .models import Filter, Query, QueuryFilter, Report
 
 
 class QueuryFilterInline(admin.TabularInline):
@@ -20,3 +20,4 @@ class QueryAdmin(admin.ModelAdmin):
 
 admin.site.register(Filter)
 admin.site.register(Query, QueryAdmin)
+admin.site.register(Report)
