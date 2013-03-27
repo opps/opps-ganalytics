@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 from django.utils.translation import ugettext_lazy as _
+from django.core.urlresolvers import reverse
 from django.db import models
 
 from googleanalytics.account import  filter_operators
 
 from opps.core.models import Publishable, Date
+from opps.articles.models import Article
+
 
 FIELDS_FILTER = ['pageviews', 'pagePath']
 
@@ -49,3 +52,36 @@ class Query(Publishable):
     filter = models.ManyToManyField('ganalytics.Filter', null=True,
                                     blank=True, related_name='query_filters',
                                     through='ganalytics.QueuryFilter')
+
+
+class Report(Date):
+    url = models.CharField(_('URL'), max_length=255)
+
+    # Get Google Analytics
+    pageview = models.IntegerField(default=0)
+    timeonpage = models.IntegerField(default=0)
+    entrances = models.IntegerField(default=0)
+
+    # Opps join
+    article = models.ForeignKey('articles.Article', null=True, blank=True,
+                                related_name='report_articles',
+                                on_delete=models.SET_NULL)
+
+    def save(self, *args, **kwargs):
+        def _domain(sefl, domain):
+            if ':' in domain:
+                return domain.split(':', 1)[0]
+            return domain
+
+        try:
+            not_domian = self.url.replace(self.url.split('/')[0], '')
+            slug = not_domian.split('/')[-1]
+            article = Article.objects.filter(slug=slug, site__domain=_domain(self.url.split('/')[0]))
+            for a in article:
+                if a.channel.long_slug in not_domian.replace(slug, ''):
+                    self.article = a
+                    break
+        except:
+            pass
+
+        super(Report, self).save(*args, **kwargs)
