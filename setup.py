@@ -7,7 +7,8 @@ from opps import ganalytics
 
 
 
-install_requires = ["opps", "django-celery"]
+install_requires = ["opps", "django-celery", "python-googleanalytics"]
+dependency_links = ['http://github.com/avelino/python-googleanalytics/tarball/master#egg=python-googleanalytics']
 
 classifiers = ["Development Status :: 4 - Beta",
                "Intended Audience :: Developers",
