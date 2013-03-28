@@ -26,6 +26,7 @@ class QueryAdmin(admin.ModelAdmin):
 
 class ReportAdmin(admin.ModelAdmin):
     list_display = ['url', 'pageview', 'article']
+    search_fields = ['url']
 
 
 admin.site.register(Filter, FilterAdmin)
