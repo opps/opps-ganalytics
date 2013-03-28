@@ -44,8 +44,8 @@ class QueuryFilter(models.Model):
 
 class Query(Publishable):
     name = models.CharField(_(u"Name"), max_length=140)
-    start_date = models.DateTimeField(_(u"Start date"))
-    end_date = models.DateTimeField(_(u"End date"))
+    start_date = models.DateTimeField(_(u"Start date"), null=True, blank=True)
+    end_date = models.DateTimeField(_(u"End date"), null=True, blank=True)
     metrics = models.CharField(_(u"Metrics"), choices=(
         ('pageviews','Pageviews'),
         ('uniquepageviews','Unique Pageviews')), max_length=15)
@@ -59,7 +59,7 @@ class Report(Date):
 
     # Get Google Analytics
     pageview = models.IntegerField(default=0)
-    timeonpage = models.IntegerField(default=0)
+    timeonpage = models.CharField(_(u'Time on page'), max_length=25, default=0)
     entrances = models.IntegerField(default=0)
 
     # Opps join
