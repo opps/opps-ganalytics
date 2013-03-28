@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 
-from .models import Filter, Query, QueuryFilter, Report
+from .models import Filter, Query, QueuryFilter, Report, Account
 
 
 class QueuryFilterInline(admin.TabularInline):
@@ -28,7 +28,11 @@ class ReportAdmin(admin.ModelAdmin):
     list_display = ['url', 'pageview', 'article']
     search_fields = ['url']
 
+class AccountAdmin(admin.ModelAdmin):
+    list_display = ['title', 'account_name', 'profile_id']
+
 
 admin.site.register(Filter, FilterAdmin)
 admin.site.register(Query, QueryAdmin)
 admin.site.register(Report, ReportAdmin)
+admin.site.register(Account, AccountAdmin)
