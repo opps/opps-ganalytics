@@ -23,7 +23,10 @@ def get_metadata():
                                  published=True)
 
     for q in query:
-        filters = [[f.filter.field, f.filter.operator, f.filter.expression] \
+        filters = [[f.filter.field,
+                    f.filter.operator,
+                    f.filter.expression,
+                    f.filter.combined or ''] \
                    for f in QueuryFilter.objects.filter(query=query)]
 
         start_date = datetime.date.today()
