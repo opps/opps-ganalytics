@@ -53,6 +53,7 @@ class QueuryFilter(models.Model):
 
 class Query(Publishable):
     name = models.CharField(_(u"Name"), max_length=140)
+    account = models.ForeignKey('ganalytics.Account')
     start_date = models.DateTimeField(_(u"Start date"), null=True, blank=True)
     end_date = models.DateTimeField(_(u"End date"), null=True, blank=True)
     metrics = models.CharField(_(u"Metrics"), choices=(
@@ -61,6 +62,9 @@ class Query(Publishable):
     filter = models.ManyToManyField('ganalytics.Filter', null=True,
                                     blank=True, related_name='query_filters',
                                     through='ganalytics.QueuryFilter')
+
+    def __unicode__(self):
+        return u"{0}-{1}".format(self.account.title, self.name)
 
 
 class Report(Date):
@@ -101,3 +105,6 @@ class Account(Date):
     account_name = models.CharField(_(u"Account name"), max_length=150)
     title = models.CharField(_(u'Title'), max_length=255)
     profile_id = models.IntegerField(unique=True)
+
+    def __unicode__(self):
+        return u"{0}-{1}".format(self.title, self.profile_id)
