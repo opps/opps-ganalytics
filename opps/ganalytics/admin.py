@@ -15,6 +15,10 @@ class QueuryFilterInline(admin.TabularInline):
         'fields': ('filter', 'order')})]
 
 
+class FilterAdmin(admin.ModelAdmin):
+    list_display = ['field', 'operator', 'expression', 'combined']
+
+
 class QueryAdmin(admin.ModelAdmin):
     list_display = ['name', 'start_date', 'end_date', 'metrics']
     inlines = [QueuryFilterInline]
@@ -23,6 +27,7 @@ class QueryAdmin(admin.ModelAdmin):
 class ReportAdmin(admin.ModelAdmin):
     list_display = ['url', 'pageview', 'article']
 
-admin.site.register(Filter)
+
+admin.site.register(Filter, FilterAdmin)
 admin.site.register(Query, QueryAdmin)
 admin.site.register(Report, ReportAdmin)
