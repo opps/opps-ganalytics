@@ -26,12 +26,16 @@ def get_metadata():
         filters = [[f.filter.field, f.filter.operator, f.filter.expression] \
                    for f in QueuryFilter.objects.filter(query=query)]
 
-        start_date = datetime.date(q.start_date.year,
-                                   q.start_date.month,
-                                   q.start_date.day)
-        end_date = datetime.date(q.end_date.year,
-                                 q.end_date.month,
-                                 q.end_date.day)
+        start_date = datetime.date.today()
+        if q.start_date:
+            start_date = datetime.date(q.start_date.year,
+                                       q.start_date.month,
+                                       q.start_date.day)
+        end_date = datetime.date.today()
+        if q.end_date:
+            end_date = datetime.date(q.end_date.year,
+                                     q.end_date.month,
+                                     q.end_date.day)
         metrics = ['pageviews', 'timeOnPage', 'entrances']
         dimensions = ['pageTitle', 'pagePath']
         data = account.get_data(start_date, end_date, metrics=metrics,
@@ -40,8 +44,8 @@ def get_metadata():
 
         for row in data.list:
             report, create = Report.objects.get_or_create(url=row[0][1])
-            if create:
+            if report:
                 report.pageview = row[1][0]
-                #report.timeonpage = row[1][1]
+                report.timeonpage = row[1][1]
                 report.entrances = row[1][2]
                 report.save()
