@@ -18,6 +18,10 @@ class QueuryFilterInline(admin.TabularInline):
 class QueryAdmin(admin.ModelAdmin):
     inlines = [QueuryFilterInline]
 
+
+class ReportAdmin(admin.ModelAdmin):
+    list_display = ['url', 'pageview', 'article']
+
 admin.site.register(Filter)
 admin.site.register(Query, QueryAdmin)
-admin.site.register(Report)
+admin.site.register(Report, ReportAdmin)
