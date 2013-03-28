@@ -9,7 +9,7 @@ from celery.decorators import periodic_task
 from celery.task.schedules import crontab
 from googleanalytics import Connection
 
-from .models import Query, QueuryFilter
+from .models import Query, QueuryFilter, Report
 
 
 @periodic_task(run_every=crontab(hour="*", minute="*", day_of_week="*"))
@@ -36,9 +36,12 @@ def get_metadata():
         dimensions = ['pageTitle', 'pagePath']
         data = account.get_data(start_date, end_date, metrics=metrics,
                                 dimensions=dimensions, filters=filters,
-                                max_results=10, sort=['-pageviews',])
+                                max_results=1000, sort=['-pageviews',])
 
         for row in data.list:
-            print row[0]
-            print row[1]
-            print "\n\n"
+            report, create = Report.objects.get_or_create(url=row[0][1])
+            if create:
+                report.pageview = row[1][0]
+                #report.timeonpage = row[1][1]
+                report.entrances = row[1][2]
+                report.save()
