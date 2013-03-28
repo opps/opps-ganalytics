@@ -9,10 +9,32 @@ from celery.decorators import periodic_task
 from celery.task.schedules import crontab
 from googleanalytics import Connection
 
-from .models import Query, QueuryFilter, Report
+from .models import Query, QueuryFilter, Report, Account
 
 
 @periodic_task(run_every=crontab(hour="*", minute="*", day_of_week="*"))
+def get_accounts():
+    connection = Connection(settings.OPPS_GANALYTICS_ACCOUNT,
+                            settings.OPPS_GANALYTICS_PASSWORD,
+                            settings.OPPS_GANALYTICS_APIKEY)
+
+    accounts = connection.get_accounts()
+
+    for a in accounts:
+        obj, create = Account.objects.get_or_create(
+            profile_id=a.profile_id,
+            account_id = a.account_id,
+            account_name = a.account_name,
+            title = a.title
+        )
+        if not create:
+            obj.account_id = a.account_id
+            obj.account_name = a.account_name
+            obj.title = a.title
+            obj.save()
+
+
+@periodic_task(run_every=crontab(hour="*/4", minute="*", day_of_week="*"))
 def get_metadata():
     connection = Connection(settings.OPPS_GANALYTICS_ACCOUNT,
                             settings.OPPS_GANALYTICS_PASSWORD,
