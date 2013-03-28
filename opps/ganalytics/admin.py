@@ -29,6 +29,7 @@ class ReportAdmin(admin.ModelAdmin):
     list_display = ['url', 'pageview', 'article']
     search_fields = ['url']
 
+
 class AccountAdmin(admin.ModelAdmin):
     list_display = ['title', 'account_name', 'profile_id']
     search_fields = ['title', 'account_name', 'profile_id']

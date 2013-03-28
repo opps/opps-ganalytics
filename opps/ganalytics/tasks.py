@@ -4,7 +4,6 @@ import datetime
 from django.utils import timezone
 from django.conf import settings
 
-from celery import task
 from celery.decorators import periodic_task
 from celery.task.schedules import crontab
 from googleanalytics import Connection
@@ -21,12 +20,10 @@ def get_accounts():
     accounts = connection.get_accounts()
 
     for a in accounts:
-        obj, create = Account.objects.get_or_create(
-            profile_id=a.profile_id,
-            account_id = a.account_id,
-            account_name = a.account_name,
-            title = a.title
-        )
+        obj, create = Account.objects.get_or_create(profile_id=a.profile_id,
+                                                    account_id=a.account_id,
+                                                    account_name=a.account_name,
+                                                    title=a.title)
         if not create:
             obj.account_id = a.account_id
             obj.account_name = a.account_name
@@ -49,7 +46,7 @@ def get_metadata():
         filters = [[f.filter.field,
                     f.filter.operator,
                     f.filter.expression,
-                    f.filter.combined or ''] \
+                    f.filter.combined or '']
                    for f in QueuryFilter.objects.filter(query=query)]
 
         start_date = datetime.date.today()
@@ -66,7 +63,7 @@ def get_metadata():
         dimensions = ['pageTitle', 'pagePath']
         data = account.get_data(start_date, end_date, metrics=metrics,
                                 dimensions=dimensions, filters=filters,
-                                max_results=1000, sort=['-pageviews',])
+                                max_results=1000, sort=['-pageviews'])
 
         for row in data.list:
             report, create = Report.objects.get_or_create(url=row[0][1])

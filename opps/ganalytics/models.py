@@ -2,7 +2,7 @@
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
 
-from googleanalytics.account import  filter_operators
+from googleanalytics.account import filter_operators
 from appconf import AppConf
 
 from opps.core.models import Publishable, Date
@@ -30,8 +30,8 @@ class Filter(Date):
     expression = models.CharField(_(u"Expression"), max_length=255,
                                   help_text=_(u'Regular expression'))
     combined = models.CharField(_(u"Combined"), max_length=3, null=True,
-                                blank=True, choices=(('OR','OR'),
-                                                     ('AND','AND')))
+                                blank=True, choices=(('OR', 'OR'),
+                                                     ('AND', 'AND')))
 
 
 class QueuryFilter(models.Model):
@@ -57,8 +57,8 @@ class Query(Publishable):
     start_date = models.DateTimeField(_(u"Start date"), null=True, blank=True)
     end_date = models.DateTimeField(_(u"End date"), null=True, blank=True)
     metrics = models.CharField(_(u"Metrics"), choices=(
-        ('pageviews','Pageviews'),
-        ('uniquepageviews','Unique Pageviews')), max_length=15)
+        ('pageviews', 'Pageviews'),
+        ('uniquepageviews', 'Unique Pageviews')), max_length=15)
     filter = models.ManyToManyField('ganalytics.Filter', null=True,
                                     blank=True, related_name='query_filters',
                                     through='ganalytics.QueuryFilter')
