@@ -55,7 +55,7 @@ class Query(Publishable):
 
 
 class Report(Date):
-    url = models.CharField(_('URL'), max_length=255)
+    url = models.CharField(_('URL'), max_length=255, unique=True)
 
     # Get Google Analytics
     pageview = models.IntegerField(default=0)
