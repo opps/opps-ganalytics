@@ -94,3 +94,10 @@ class Report(Date):
             pass
 
         super(Report, self).save(*args, **kwargs)
+
+
+class Account(Date):
+    account_id = models.IntegerField()
+    account_name = models.CharField(_(u"Account name"), max_length=150)
+    title = models.CharField(_(u'Title'), max_length=255)
+    profile_id = models.IntegerField(unique=True)
