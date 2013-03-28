@@ -1,15 +1,24 @@
 # -*- coding: utf-8 -*-
 from django.utils.translation import ugettext_lazy as _
-from django.core.urlresolvers import reverse
 from django.db import models
 
 from googleanalytics.account import  filter_operators
+from appconf import AppConf
 
 from opps.core.models import Publishable, Date
 from opps.articles.models import Article
 
 
 FIELDS_FILTER = ['pageviews', 'pagePath']
+
+
+class GAnalyticsConf(AppConf):
+    ACCOUNT = ''
+    PASSWORD = ''
+    APIKEY = ''
+
+    class Meta:
+        prefix = 'opps_ganalytics'
 
 
 class Filter(Date):
