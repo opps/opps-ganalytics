@@ -20,8 +20,9 @@ class FilterAdmin(admin.ModelAdmin):
 
 
 class QueryAdmin(admin.ModelAdmin):
-    list_display = ['name', 'start_date', 'end_date', 'metrics']
+    list_display = ['name', 'start_date', 'end_date', 'metrics', 'account']
     inlines = [QueuryFilterInline]
+    raw_id_fields = ['account']
 
 
 class ReportAdmin(admin.ModelAdmin):
@@ -30,6 +31,7 @@ class ReportAdmin(admin.ModelAdmin):
 
 class AccountAdmin(admin.ModelAdmin):
     list_display = ['title', 'account_name', 'profile_id']
+    search_fields = ['title', 'account_name', 'profile_id']
 
 
 admin.site.register(Filter, FilterAdmin)
