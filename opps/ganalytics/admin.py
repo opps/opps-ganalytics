@@ -16,6 +16,7 @@ class QueuryFilterInline(admin.TabularInline):
 
 
 class QueryAdmin(admin.ModelAdmin):
+    list_display = ['name', 'start_date', 'end_date', 'metrics']
     inlines = [QueuryFilterInline]
 
 
