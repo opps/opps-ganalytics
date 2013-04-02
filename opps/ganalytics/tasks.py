@@ -31,7 +31,7 @@ def get_accounts():
             obj.save()
 
 
-@periodic_task(run_every=crontab(hour="*/4", minute="*", day_of_week="*"))
+@periodic_task(run_every=crontab(hour="*", minute="*", day_of_week="*"))
 def get_metadata():
     connection = Connection(settings.OPPS_GANALYTICS_ACCOUNT,
                             settings.OPPS_GANALYTICS_PASSWORD,
