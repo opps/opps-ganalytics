@@ -2,7 +2,9 @@
 from django import template
 from opps.ganalytics.models import Report
 
+
 register = template.Library()
+
 
 @register.simple_tag
 def get_top_read(number=10, channel_slug=None,
