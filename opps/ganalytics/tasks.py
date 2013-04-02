@@ -61,9 +61,16 @@ def get_metadata():
                                      q.end_date.day)
         metrics = ['pageviews', 'timeOnPage', 'entrances']
         dimensions = ['pageTitle', 'pagePath']
-        data = account.get_data(start_date, end_date, metrics=metrics,
-                                dimensions=dimensions, filters=filters,
-                                max_results=1000, sort=['-pageviews'])
+
+        data = []
+        count_data = len(data)
+        while count_data == 0:
+            data = account.get_data(start_date, end_date, metrics=metrics,
+                                    dimensions=dimensions, filters=filters,
+                                    max_results=1000, sort=['-pageviews'])
+            start_date -= datetime.timedelta(days=1)
+            end_date -= datetime.timedelta(days=1)
+            count_data = len(data)
 
         for row in data.list:
             report, create = Report.objects.get_or_create(url=row[0][1])
