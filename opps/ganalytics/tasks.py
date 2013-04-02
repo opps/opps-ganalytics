@@ -64,7 +64,7 @@ def get_metadata():
 
         data = []
         count_data = len(data)
-        while (count_data == 0):
+        while count_data == 0:
             data = account.get_data(start_date, end_date, metrics=metrics,
                                     dimensions=dimensions, filters=filters,
                                     max_results=1000, sort=['-pageviews'])
