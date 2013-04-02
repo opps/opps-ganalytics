@@ -10,7 +10,7 @@ def get_top_read(number=10, channel_slug=None,
 
     top_read = Report.objects.filter(article__isnull=False).order_by('-pageview')
     if channel_slug:
-        top_read = top_read.filter(article__channel_slug=channel_slug)
+        top_read = top_read.filter(article__channel__slug=channel_slug)
 
     top_read = top_read[:number]
 
