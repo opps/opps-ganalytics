@@ -26,7 +26,7 @@ except:
     long_description = ganalytics.__description__
 
 setup(name='opps-ganalytics',
-        namespace_packages=['opps.ganalytics'],
+        namespace_packages=['opps', 'opps.ganalytics'],
         version=ganalytics.__version__,
         description=ganalytics.__description__,
         long_description=long_description,
