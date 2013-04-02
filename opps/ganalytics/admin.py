@@ -28,6 +28,7 @@ class QueryAdmin(admin.ModelAdmin):
 class ReportAdmin(admin.ModelAdmin):
     list_display = ['url', 'pageview', 'article']
     search_fields = ['url']
+    raw_id_fields = ['article']
 
 
 class AccountAdmin(admin.ModelAdmin):
