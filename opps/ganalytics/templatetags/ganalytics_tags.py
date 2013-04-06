@@ -8,7 +8,7 @@ register = template.Library()
 
 @register.simple_tag
 def get_top_read(number=10, channel_slug=None,
-                template_name='ganalytics/top_read.html'):
+                 template_name='ganalytics/top_read.html'):
 
     top_read = Report.objects.filter(article__isnull=False).order_by('-pageview')
     if channel_slug:
