@@ -2,6 +2,7 @@
 from django.contrib import admin
 
 from .models import Filter, Query, QueuryFilter, Report, Account
+from opps.core.admin import apply_opps_rules
 
 
 class QueuryFilterInline(admin.TabularInline):
@@ -15,22 +16,26 @@ class QueuryFilterInline(admin.TabularInline):
         'fields': ('filter', 'order')})]
 
 
+@apply_opps_rules('ganalytics')
 class FilterAdmin(admin.ModelAdmin):
     list_display = ['field', 'operator', 'expression', 'combined']
 
 
+@apply_opps_rules('ganalytics')
 class QueryAdmin(admin.ModelAdmin):
     list_display = ['name', 'start_date', 'end_date', 'metrics', 'account']
     inlines = [QueuryFilterInline]
     raw_id_fields = ['account']
 
 
+@apply_opps_rules('ganalytics')
 class ReportAdmin(admin.ModelAdmin):
     list_display = ['url', 'pageview', 'article']
     search_fields = ['url']
     raw_id_fields = ['article']
 
 
+@apply_opps_rules('ganalytics')
 class AccountAdmin(admin.ModelAdmin):
     list_display = ['title', 'account_name', 'profile_id']
     search_fields = ['title', 'account_name', 'profile_id']
