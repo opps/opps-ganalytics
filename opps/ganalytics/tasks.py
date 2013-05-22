@@ -8,7 +8,7 @@ from celery.decorators import periodic_task
 from celery.task.schedules import crontab
 from googleanalytics import Connection
 
-from .models import Query, QueuryFilter, Report, Account
+from .models import Query, QueryFilter, Report, Account
 
 
 @periodic_task(run_every=crontab(hour="*", minute="*", day_of_week="*"))
@@ -47,7 +47,7 @@ def get_metadata():
                     f.filter.operator,
                     f.filter.expression,
                     f.filter.combined or '']
-                   for f in QueuryFilter.objects.filter(query=query)]
+                   for f in QueryFilter.objects.filter(query=query)]
 
         start_date = datetime.date.today()
         if q.start_date:

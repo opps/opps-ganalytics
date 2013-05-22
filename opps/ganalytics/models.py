@@ -34,7 +34,7 @@ class Filter(Date):
                                                      ('AND', 'AND')))
 
 
-class QueuryFilter(models.Model):
+class QueryFilter(models.Model):
     query = models.ForeignKey('ganalytics.Query',
                               verbose_name=_(u'Query'),
                               null=True, blank=True,
@@ -61,7 +61,7 @@ class Query(Publishable):
         ('uniquepageviews', 'Unique Pageviews')), max_length=15)
     filter = models.ManyToManyField('ganalytics.Filter', null=True,
                                     blank=True, related_name='query_filters',
-                                    through='ganalytics.QueuryFilter')
+                                    through='ganalytics.QueryFilter')
 
     def __unicode__(self):
         return u"{0}-{1}".format(self.account.title, self.name)
@@ -87,11 +87,11 @@ class Report(Date):
             return domain
 
         try:
-            not_domian = self.url.replace(self.url.split('/')[0], '')
-            slug = not_domian.split('/')[-1]
+            not_domain = self.url.replace(self.url.split('/')[0], '')
+            slug = not_domain.split('/')[-1]
             article = Article.objects.filter(slug=slug, site__domain=_domain(self.url.split('/')[0]))
             for a in article:
-                if a.channel.long_slug in not_domian.replace(slug, ''):
+                if a.channel.long_slug in not_domain.replace(slug, ''):
                     self.article = a
                     break
         except:

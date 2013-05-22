@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 
-from .models import Filter, Query, QueuryFilter, Report, Account
+from .models import Filter, Query, QueryFilter, Report, Account
 from opps.core.admin import apply_opps_rules
 
 
-class QueuryFilterInline(admin.TabularInline):
-    model = QueuryFilter
+class QueryFilterInline(admin.TabularInline):
+    model = QueryFilter
     fk_name = 'query'
     raw_id_fields = ['filter']
     actions = None
@@ -24,7 +24,7 @@ class FilterAdmin(admin.ModelAdmin):
 @apply_opps_rules('ganalytics')
 class QueryAdmin(admin.ModelAdmin):
     list_display = ['name', 'start_date', 'end_date', 'metrics', 'account']
-    inlines = [QueuryFilterInline]
+    inlines = [QueryFilterInline]
     raw_id_fields = ['account']
 
 
