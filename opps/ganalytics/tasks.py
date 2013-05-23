@@ -92,6 +92,5 @@ def get_metadata():
                     report.entrances = row[1][2]
                     report.save()
                     # print report.article
-            except Exception, e:
-                print str(e)
-                print report, report.url, report.article
+            except:
+                pass
