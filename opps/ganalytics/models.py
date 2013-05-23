@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
+from urlparse import urlparse
+
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
+from django.contrib.redirects.models import Redirect
 
 from googleanalytics.account import filter_operators
 from appconf import AppConf
@@ -89,22 +92,53 @@ class Report(Date):
     )
 
     def save(self, *args, **kwargs):
-        def _domain(sefl, domain):
-            if ':' in domain:
-                return domain.split(':', 1)[0]
-            return domain
+
+        self.article = None
 
         try:
-            not_domain = self.url.replace(self.url.split('/')[0], '')
-            slug = not_domain.split('/')[-1]
-            article = Article.objects.filter(
-                slug=slug,
-                site__domain=_domain(self.url.split('/')[0])
+            redirects = Redirect.objects.filter(
+                old_path=self.url,
             )
-            for a in article:
-                if a.channel.long_slug in not_domain.replace(slug, ''):
-                    self.article = a
-                    break
+
+            if redirects:
+                redirect = redirects[0]
+                _site = redirect.site
+                _slug = redirect.new_path.split('/')[-1]
+
+                articles = Article.objects.filter(
+                    slug=_slug,
+                    site=_site,
+                )
+
+                for article in articles:
+                    if article.channel.long_slug in redirect.new_path:
+                        self.article = article
+                        break
+
+        except:
+            pass
+
+        try:
+            if not self.article:
+                url = urlparse(self.url)
+                slug = url.path.split('/')[-1]
+                """
+                long_slug = '/'.join(url.path.split('/')[:-1]).partition('/')[-1]
+                # The long slug above does not works because of links liks
+                # /album, /video, /link etc..
+                """
+                domain = url.netloc
+
+                articles = Article.objects.filter(
+                    slug=slug,
+                    site__domain=domain,
+                    # channel_long_slug=long_slug
+                )
+
+                for article in articles:
+                    if article.channel.long_slug in url.path:
+                        self.article = article
+                        break
         except:
             pass
 
