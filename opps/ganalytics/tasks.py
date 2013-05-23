@@ -82,12 +82,16 @@ def get_metadata():
             count_data = len(data)
 
         for row in data.list:
-            # print row
-            report, create = Report.objects.get_or_create(url=row[0][1][:255])
-            # print report
-            if report:
-                report.pageview = row[1][0]
-                report.timeonpage = row[1][1]
-                report.entrances = row[1][2]
-                report.save()
-                # print report.article
+            try:
+                # print row
+                report, create = Report.objects.get_or_create(url=row[0][1][:255])
+                # print report
+                if report:
+                    report.pageview = row[1][0]
+                    report.timeonpage = row[1][1]
+                    report.entrances = row[1][2]
+                    report.save()
+                    # print report.article
+            except Exception, e:
+                print str(e)
+                print report, report.url, report.article
