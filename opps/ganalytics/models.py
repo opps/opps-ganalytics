@@ -95,10 +95,22 @@ class Report(Date):
 
         self.article = None
 
+        self.url = self.url.strip()
+
+        if not self.url.startswith("http"):
+            self.url = "http://{}".format(self.url)
+
         try:
             redirects = Redirect.objects.filter(
                 old_path=self.url,
             )
+
+            # try without scheme://domain
+            if not redirects:
+                _url = urlparse(self.url)
+                redirects = Redirect.objects.filter(
+                    old_path=_url.path
+                )
 
             if redirects:
                 redirect = redirects[0]
