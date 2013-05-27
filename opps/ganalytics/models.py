@@ -68,11 +68,13 @@ class Query(Publishable):
 
 
 class Report(Date):
-    url = models.CharField(_('URL'), max_length=255, unique=True)
+    url = models.CharField(_('URL'), max_length=255, unique=True,
+                           db_index=True)
 
     # Get Google Analytics
-    pageview = models.IntegerField(default=0)
-    timeonpage = models.CharField(_(u'Time on page'), max_length=25, default=0)
+    pageview = models.IntegerField(default=0, db_index=True)
+    timeonpage = models.CharField(_(u'Time on page'), max_length=25,
+                                  default=0)
     entrances = models.IntegerField(default=0)
 
     # Opps join
@@ -89,7 +91,8 @@ class Report(Date):
         try:
             not_domian = self.url.replace(self.url.split('/')[0], '')
             slug = not_domian.split('/')[-1]
-            article = Article.objects.filter(slug=slug, site__domain=_domain(self.url.split('/')[0]))
+            article = Article.objects.filter(
+                slug=slug, site__domain=_domain(self.url.split('/')[0]))
             for a in article:
                 if a.channel.long_slug in not_domian.replace(slug, ''):
                     self.article = a
