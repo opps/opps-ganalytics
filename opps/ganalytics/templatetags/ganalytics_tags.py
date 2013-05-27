@@ -20,7 +20,7 @@ def get_top_read(number=10, channel_slug=None, child_class=None,
     if child_class:
         top_read = top_read.filter(article__child_class=child_class)
 
-    top_read = top_read[:number]
+    top_read = top_read.distinct()[:number]
 
     t = template.loader.get_template(template_name)
 
