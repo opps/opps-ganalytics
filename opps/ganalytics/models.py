@@ -19,6 +19,7 @@ class GAnalyticsConf(AppConf):
     ACCOUNT = ''
     PASSWORD = ''
     APIKEY = ''
+    STATUS = True
 
     class Meta:
         prefix = 'opps_ganalytics'
