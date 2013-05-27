@@ -16,10 +16,13 @@ FIELDS_FILTER = ['pageviews', 'pagePath']
 
 
 class GAnalyticsConf(AppConf):
-    ACCOUNT = ''
-    PASSWORD = ''
-    APIKEY = ''
+    ACCOUNT = u''
+    PASSWORD = u''
+    APIKEY = u''
     STATUS = True
+    RUN_EVERY_HOUR = u"*/4"
+    RUN_EVERY_MINUTE = u"*"
+    RUN_EVERY_DAY_OF_WEEK = u"*"
 
     class Meta:
         prefix = 'opps_ganalytics'
