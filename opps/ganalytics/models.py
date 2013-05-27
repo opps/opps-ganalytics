@@ -132,16 +132,6 @@ class Report(Date):
             pass
 
         try:
-<<<<<<< HEAD
-            not_domian = self.url.replace(self.url.split('/')[0], '')
-            slug = not_domian.split('/')[-1]
-            article = Article.objects.filter(
-                slug=slug, site__domain=_domain(self.url.split('/')[0]))
-            for a in article:
-                if a.channel.long_slug in not_domian.replace(slug, ''):
-                    self.article = a
-                    break
-=======
             if not self.article:
                 url = urlparse(self.url)
                 slug = url.path.split('/')[-1]
@@ -162,7 +152,6 @@ class Report(Date):
                     if article.channel.long_slug in url.path:
                         self.article = article
                         break
->>>>>>> f65d08f5a71262c8533ad0a92c676ec4920f37bb
         except:
             pass
 
