@@ -10,7 +10,10 @@ register = template.Library()
 def get_top_read(number=10, channel_slug=None, child_class=None,
                  template_name='ganalytics/top_read.html'):
 
-    top_read = Report.objects.filter(article__isnull=False).order_by('-pageview')
+    top_read = Report.objects.filter(
+        article__isnull=False
+    ).order_by('-pageview')
+
     if channel_slug:
         top_read = top_read.filter(article__channel_long_slug=channel_slug)
 

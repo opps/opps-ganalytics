@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
+from urlparse import urlparse
+
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
+from django.contrib.redirects.models import Redirect
 
 from googleanalytics.account import filter_operators
 from appconf import AppConf
@@ -34,7 +37,7 @@ class Filter(Date):
                                                      ('AND', 'AND')))
 
 
-class QueuryFilter(models.Model):
+class QueryFilter(models.Model):
     query = models.ForeignKey('ganalytics.Query',
                               verbose_name=_(u'Query'),
                               null=True, blank=True,
@@ -61,7 +64,7 @@ class Query(Publishable):
         ('uniquepageviews', 'Unique Pageviews')), max_length=15)
     filter = models.ManyToManyField('ganalytics.Filter', null=True,
                                     blank=True, related_name='query_filters',
-                                    through='ganalytics.QueuryFilter')
+                                    through='ganalytics.QueryFilter')
 
     def __unicode__(self):
         return u"{0}-{1}".format(self.account.title, self.name)
@@ -73,22 +76,63 @@ class Report(Date):
 
     # Get Google Analytics
     pageview = models.IntegerField(default=0, db_index=True)
-    timeonpage = models.CharField(_(u'Time on page'), max_length=25,
-                                  default=0)
+    timeonpage = models.CharField(
+        _(u'Time on page'),
+        max_length=25,
+        default=0
+    )
     entrances = models.IntegerField(default=0)
 
     # Opps join
-    article = models.ForeignKey('articles.Article', null=True, blank=True,
-                                related_name='report_articles',
-                                on_delete=models.SET_NULL)
+    article = models.ForeignKey(
+        'articles.Article',
+        null=True,
+        blank=True,
+        related_name='report_articles',
+        on_delete=models.SET_NULL
+    )
 
     def save(self, *args, **kwargs):
-        def _domain(sefl, domain):
-            if ':' in domain:
-                return domain.split(':', 1)[0]
-            return domain
+
+        self.article = None
+
+        self.url = self.url.strip()
+
+        if not self.url.startswith("http"):
+            self.url = "http://{}".format(self.url)
 
         try:
+            redirects = Redirect.objects.filter(
+                old_path=self.url,
+            )
+
+            # try without scheme://domain
+            if not redirects:
+                _url = urlparse(self.url)
+                redirects = Redirect.objects.filter(
+                    old_path=_url.path
+                )
+
+            if redirects:
+                redirect = redirects[0]
+                _site = redirect.site
+                _slug = redirect.new_path.split('/')[-1]
+
+                articles = Article.objects.filter(
+                    slug=_slug,
+                    site=_site,
+                )
+
+                for article in articles:
+                    if article.channel.long_slug in redirect.new_path:
+                        self.article = article
+                        break
+
+        except:
+            pass
+
+        try:
+<<<<<<< HEAD
             not_domian = self.url.replace(self.url.split('/')[0], '')
             slug = not_domian.split('/')[-1]
             article = Article.objects.filter(
@@ -97,6 +141,28 @@ class Report(Date):
                 if a.channel.long_slug in not_domian.replace(slug, ''):
                     self.article = a
                     break
+=======
+            if not self.article:
+                url = urlparse(self.url)
+                slug = url.path.split('/')[-1]
+                """
+                long_slug = '/'.join(url.path.split('/')[:-1]).partition('/')[-1]
+                # The long slug above does not works because of links liks
+                # /album, /video, /link etc..
+                """
+                domain = url.netloc
+
+                articles = Article.objects.filter(
+                    slug=slug,
+                    site__domain=domain,
+                    # channel_long_slug=long_slug
+                )
+
+                for article in articles:
+                    if article.channel.long_slug in url.path:
+                        self.article = article
+                        break
+>>>>>>> f65d08f5a71262c8533ad0a92c676ec4920f37bb
         except:
             pass
 
@@ -105,7 +171,10 @@ class Report(Date):
 
 class Account(Date):
     account_id = models.IntegerField()
-    account_name = models.CharField(_(u"Account name"), max_length=150)
+    account_name = models.CharField(
+        _(u"Account name"),
+        max_length=150
+    )
     title = models.CharField(_(u'Title'), max_length=255)
     profile_id = models.IntegerField(unique=True)
 
