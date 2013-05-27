@@ -11,7 +11,9 @@ from googleanalytics import Connection
 from .models import Query, QueryFilter, Report, Account
 
 
-@periodic_task(run_every=crontab(hour="*", minute="*", day_of_week="*"))
+@periodic_task(run_every=crontab(hour=settings.OPPS_GANALYTICS_RUN_EVERY_HOUR,
+                                 minute=settings.OPPS_GANALYTICS_RUN_EVERY_MINUTE,
+                                 day_of_week=settings.OPPS_GANALYTICS_RUN_EVERY_DAY_OF_WEEK))
 def get_accounts():
     if not settings.OPPS_GANALYTICS_STATUS:
         return None
@@ -35,7 +37,9 @@ def get_accounts():
             obj.save()
 
 
-@periodic_task(run_every=crontab(hour="*", minute="*", day_of_week="*"))
+@periodic_task(run_every=crontab(hour=settings.OPPS_GANALYTICS_RUN_EVERY_HOUR,
+                                 minute=settings.OPPS_GANALYTICS_RUN_EVERY_MINUTE,
+                                 day_of_week=settings.OPPS_GANALYTICS_RUN_EVERY_DAY_OF_WEEK))
 def get_metadata():
     if not settings.OPPS_GANALYTICS_STATUS:
         return None
