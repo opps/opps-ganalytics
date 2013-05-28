@@ -148,7 +148,7 @@ class Report(Date):
 
                 articles = Article.objects.filter(
                     slug=slug,
-                    site__domain=domain,
+                    site_domain=domain,
                     # channel_long_slug=long_slug
                 )
 
