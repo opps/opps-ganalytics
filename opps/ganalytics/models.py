@@ -23,6 +23,7 @@ class GAnalyticsConf(AppConf):
     RUN_EVERY_HOUR = u"*/4"
     RUN_EVERY_MINUTE = u"*"
     RUN_EVERY_DAY_OF_WEEK = u"*"
+    RANGE_DAYS = 30
 
     class Meta:
         prefix = 'opps_ganalytics'
