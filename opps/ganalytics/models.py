@@ -41,6 +41,10 @@ class Filter(Date):
                                 blank=True, choices=(('OR', 'OR'),
                                                      ('AND', 'AND')))
 
+    def __unicode__(self):
+        tmpl = "{self.field} {self.operator} {self.expression} {self.combined}"
+        return tmpl.format(self=self)
+
 
 class QueryFilter(models.Model):
     query = models.ForeignKey('ganalytics.Query',
