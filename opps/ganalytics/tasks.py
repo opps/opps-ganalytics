@@ -51,23 +51,15 @@ def get_metadata():
 
     query = Query.objects.filter(date_available__lte=timezone.now(),
                                  published=True)
-    # print query
 
     for q in query:
-        # print q
-        # print connection
         account = connection.get_account('{0}'.format(q.account.profile_id))
-        # print account
-        # print QueryFilter.objects.all()
-        # print q.queryfilter_queries.all()
 
         filters = [[f.filter.field,
                     f.filter.operator,
                     f.filter.expression,
                     f.filter.combined or '']
                    for f in QueryFilter.objects.filter(query=q)]
-
-        # print filters
 
         start_date = datetime.date.today()
         if q.start_date:
@@ -94,14 +86,20 @@ def get_metadata():
 
         for row in data.list:
             try:
-                # print row
-                report, create = Report.objects.get_or_create(url=row[0][1][:255])
-                # print report
+                url = row[0][1][:255]
+
+                if not url.startswith("http"):
+                    url = "http://" + url
+
+                _url = urlparse(url)
+
+                url = "{url.scheme}//{url.netloc}{url.path}".format(url=_url)
+
+                report, create = Report.objects.get_or_create(url=url)
                 if report:
                     report.pageview = row[1][0]
                     report.timeonpage = row[1][1]
                     report.entrances = row[1][2]
                     report.save()
-                    # print report.article
             except:
                 pass
