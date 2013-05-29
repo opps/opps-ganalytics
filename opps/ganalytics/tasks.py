@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
+from urlparse import urlparse
 
 from django.utils import timezone
 from django.conf import settings

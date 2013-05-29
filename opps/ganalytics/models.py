@@ -96,6 +96,8 @@ class Report(Date):
         on_delete=models.SET_NULL
     )
 
+    __unicode__ = lambda self: "{} -> {}".format(self.url, self.article)
+
     def save(self, *args, **kwargs):
 
         self.article = None
