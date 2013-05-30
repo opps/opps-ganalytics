@@ -158,12 +158,15 @@ class Report(Date):
                     site_domain=domain,
                     # channel_long_slug=long_slug
                 )
-
+                # print "model url:", url, slug
+                # print "model articles:", articles
                 for article in articles:
                     if article.channel.long_slug in url.path:
                         self.article = article
+                        # print "found:", article
                         break
         except:
+            # print str(e)
             pass
 
         super(Report, self).save(*args, **kwargs)

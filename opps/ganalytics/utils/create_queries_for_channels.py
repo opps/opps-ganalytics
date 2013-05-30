@@ -45,7 +45,7 @@ for channel in channels:
         try:
             qf2 = QueryFilter(
                 query=query,
-                filter=Filter.objects.get(pk=1),
+                filter=Filter.objects.get(pk=119),
                 order=1
             )
 

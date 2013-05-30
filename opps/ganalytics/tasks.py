@@ -26,7 +26,7 @@ def get_accounts():
     accounts = connection.get_accounts()
 
     for a in accounts:
-        # print a
+        # # print a
         obj, create = Account.objects.get_or_create(profile_id=a.profile_id,
                                                     account_id=a.account_id,
                                                     account_name=a.account_name,
@@ -53,6 +53,7 @@ def get_metadata():
                                  published=True)
 
     for q in query:
+        # print q.name
         account = connection.get_account('{0}'.format(q.account.profile_id))
 
         filters = [[f.filter.field,
@@ -84,6 +85,8 @@ def get_metadata():
             end_date -= datetime.timedelta(days=1)
             count_data = len(data)
 
+        # print len(data.list)
+
         for row in data.list:
             try:
                 url = row[0][1][:255]
@@ -93,7 +96,8 @@ def get_metadata():
 
                 _url = urlparse(url)
 
-                url = "{url.scheme}//{url.netloc}{url.path}".format(url=_url)
+                url = "{url.scheme}://{url.netloc}{url.path}".format(url=_url)
+                # print url
 
                 report, create = Report.objects.get_or_create(url=url)
                 if report:
@@ -101,5 +105,7 @@ def get_metadata():
                     report.timeonpage = row[1][1]
                     report.entrances = row[1][2]
                     report.save()
+                    # print report.article
             except:
+                # print str(e)
                 pass
