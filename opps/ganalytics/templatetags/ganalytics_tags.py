@@ -10,8 +10,8 @@ from opps.articles.models import Article
 register = template.Library()
 
 
-@register.simple_tag
-def get_top_read(number=10, channel_slug=None, child_class=None,
+@register.simple_tag(takes_context=True)
+def get_top_read(context, number=10, channel_slug=None, child_class=None,
                  template_name='ganalytics/top_read.html'):
 
     now = timezone.now()
@@ -42,4 +42,5 @@ def get_top_read(number=10, channel_slug=None, child_class=None,
 
     return t.render(template.Context({'top_read': top_read,
                                       'channel_slug': channel_slug,
-                                      'number': number}))
+                                      'number': number,
+                                      'context': context}))
