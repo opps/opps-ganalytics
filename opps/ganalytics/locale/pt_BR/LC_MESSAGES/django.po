@@ -1,0 +1,115 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-06-10 11:28-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: models.py:33
+msgid "Field"
+msgstr "Campo"
+
+#: models.py:35
+msgid "Operator"
+msgstr "Operador"
+
+#: models.py:38
+msgid "Expression"
+msgstr "Expressão"
+
+#: models.py:39
+msgid "Regular expression"
+msgstr "Expressão Regular"
+
+#: models.py:40
+msgid "Combined"
+msgstr "Combinado"
+
+#: models.py:50 models.py:61 models.py:92
+msgid "Filter"
+msgstr "Filtro"
+
+#: models.py:51 models.py:93
+msgid "Filters"
+msgstr "Filtros"
+
+#: models.py:56 models.py:96
+msgid "Query"
+msgstr "Query"
+
+#: models.py:65
+msgid "Order"
+msgstr "Ordem"
+
+#: models.py:72
+msgid "Query Filter"
+msgstr "Filtro de Query"
+
+#: models.py:73
+msgid "Query Filters"
+msgstr "Filtros de Query"
+
+#: models.py:77
+msgid "Name"
+msgstr "Nome"
+
+#: models.py:79
+msgid "Start date"
+msgstr "Data Inicial"
+
+#: models.py:80
+msgid "End date"
+msgstr "Data Final"
+
+#: models.py:81
+msgid "Metrics"
+msgstr "Métricas"
+
+#: models.py:97
+msgid "Queries"
+msgstr "Queries"
+
+#: models.py:101
+msgid "URL"
+msgstr "URL"
+
+#: models.py:107
+msgid "Time on page"
+msgstr "Tempo na página"
+
+#: models.py:194
+msgid "Report"
+msgstr "Relatório"
+
+#: models.py:195
+msgid "Reports"
+msgstr "Relatórios"
+
+#: models.py:201
+msgid "Account name"
+msgstr "Nome da Conta"
+
+#: models.py:204
+msgid "Title"
+msgstr "Título"
+
+#: models.py:211
+msgid "Account"
+msgstr "Conta"
+
+#: models.py:212
+msgid "Accounts"
+msgstr "Contas"
