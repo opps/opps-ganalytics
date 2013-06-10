@@ -45,6 +45,10 @@ class Filter(Date):
         tmpl = "{self.field} {self.operator} {self.expression} {self.combined}"
         return tmpl.format(self=self)
 
+    class Meta:
+        verbose_name = _(u'Filter')
+        verbose_name_plural = _(u'Filters')
+
 
 class QueryFilter(models.Model):
     query = models.ForeignKey('ganalytics.Query',
@@ -62,6 +66,10 @@ class QueryFilter(models.Model):
     def __unicode__(self):
         return self.query.name
 
+    class Meta:
+        verbose_name = _(u'Query Filter')
+        verbose_name_plural = _(u'Query Filters')
+
 
 class Query(Publishable):
     name = models.CharField(_(u"Name"), max_length=140)
@@ -77,6 +85,10 @@ class Query(Publishable):
 
     def __unicode__(self):
         return u"{0}-{1}".format(self.account.title, self.name)
+
+    class Meta:
+        verbose_name = _(u'Query')
+        verbose_name_plural = _(u'Queries')
 
 
 class Report(Date):
@@ -172,6 +184,11 @@ class Report(Date):
         super(Report, self).save(*args, **kwargs)
 
 
+    class Meta:
+        verbose_name = _(u'Report')
+        verbose_name_plural = _(u'Reports')
+
+
 class Account(Date):
     account_id = models.IntegerField()
     account_name = models.CharField(
@@ -183,3 +200,7 @@ class Account(Date):
 
     def __unicode__(self):
         return u"{0}-{1}".format(self.title, self.profile_id)
+
+    class Meta:
+        verbose_name = _(u'Account')
+        verbose_name_plural = _(u'Accounts')
