@@ -4,6 +4,7 @@ from urlparse import urlparse
 
 from django.utils import timezone
 from django.conf import settings
+from django.db import transaction
 
 from celery.decorators import periodic_task
 from celery.task.schedules import crontab
@@ -15,6 +16,7 @@ from .models import Query, QueryFilter, Report, Account
 @periodic_task(run_every=crontab(hour=settings.OPPS_GANALYTICS_RUN_EVERY_HOUR,
                                  minute=settings.OPPS_GANALYTICS_RUN_EVERY_MINUTE,
                                  day_of_week=settings.OPPS_GANALYTICS_RUN_EVERY_DAY_OF_WEEK))
+@transaction.commit_on_success
 def get_accounts():
     if not settings.OPPS_GANALYTICS_STATUS:
         return None
@@ -26,7 +28,7 @@ def get_accounts():
     accounts = connection.get_accounts()
 
     for a in accounts:
-        # # print a
+        # # # print  a
         obj, create = Account.objects.get_or_create(profile_id=a.profile_id,
                                                     account_id=a.account_id,
                                                     account_name=a.account_name,
@@ -41,6 +43,7 @@ def get_accounts():
 @periodic_task(run_every=crontab(hour=settings.OPPS_GANALYTICS_RUN_EVERY_HOUR,
                                  minute=settings.OPPS_GANALYTICS_RUN_EVERY_MINUTE,
                                  day_of_week=settings.OPPS_GANALYTICS_RUN_EVERY_DAY_OF_WEEK))
+@transaction.commit_on_success
 def get_metadata():
     if not settings.OPPS_GANALYTICS_STATUS:
         return None
@@ -53,7 +56,7 @@ def get_metadata():
                                  published=True)
 
     for q in query:
-        # print q.name
+        # print  q.name
         account = connection.get_account('{0}'.format(q.account.profile_id))
 
         filters = [[f.filter.field,
@@ -85,7 +88,7 @@ def get_metadata():
             end_date -= datetime.timedelta(days=1)
             count_data = len(data)
 
-        # print len(data.list)
+        # print  len(data.list)
 
         for row in data.list:
             try:
@@ -97,7 +100,7 @@ def get_metadata():
                 _url = urlparse(url)
 
                 url = "{url.scheme}://{url.netloc}{url.path}".format(url=_url)
-                # print url
+                # print  url
 
                 report, create = Report.objects.get_or_create(url=url)
                 if report:
@@ -105,7 +108,7 @@ def get_metadata():
                     report.timeonpage = row[1][1]
                     report.entrances = row[1][2]
                     report.save()
-                    # print report.article
+                    # print  report.article
             except:
-                # print str(e)
+                # # print  str(e)
                 pass
