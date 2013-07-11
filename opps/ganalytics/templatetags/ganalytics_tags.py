@@ -44,3 +44,35 @@ def get_top_read(context, number=10, channel_slug=None, child_class=None,
                                       'channel_slug': channel_slug,
                                       'number': number,
                                       'context': context}))
+
+@register.simple_tag(takes_context=True)
+def get_channels_top_read(context, *channels, **kwargs):
+    now = timezone.now()
+    start = now - timezone.timedelta(days=settings.OPPS_GANALYTICS_RANGE_DAYS)
+
+    top_read = Report.objects.filter(
+        article__isnull=False,
+        article__published=True,
+        date_update__range=(start, now),
+        article__channel_long_slug__in=channels,
+    ).order_by('-pageview')
+
+    top_read = top_read.distinct().values(
+        'article'
+    ).annotate(Sum('pageview'))
+    tops = {}
+
+    #get one from each channel
+    for top in top_read:
+        article = Article.objects.get(pk=top['article'])
+        top['article'] = article
+        if not article.channel_long_slug in tops:
+            tops[article.channel_long_slug] = top
+
+    template_name = kwargs.get('template_name',
+                               'ganalytics/channel_top_read.html')
+
+    t = template.loader.get_template(template_name)
+
+    return t.render(template.Context({'top_read': tops,
+                                      'context': context}))
