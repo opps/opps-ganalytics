@@ -30,8 +30,9 @@ class QueryAdmin(admin.ModelAdmin):
 
 @apply_opps_rules('ganalytics')
 class ReportAdmin(admin.ModelAdmin):
-    list_display = ['url', 'pageview', 'article']
-    search_fields = ['url', 'article__channel_name', 'article__channel__slug']
+    list_display = ['url', 'pageview', 'article', 'date_update']
+    search_fields = ['url', 'article__channel_name', 'article__channel__slug',
+                     'article__title']
     raw_id_fields = ['article']
 
 
