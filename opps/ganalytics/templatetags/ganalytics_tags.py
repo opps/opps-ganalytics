@@ -69,10 +69,11 @@ def get_channels_top_read(context, *channels, **kwargs):
         if not article.channel_long_slug in tops:
             tops[article.channel_long_slug] = top
 
+    ordered = sorted([val for k, val in tops.iteritems()])
     template_name = kwargs.get('template_name',
                                'ganalytics/channel_top_read.html')
 
     t = template.loader.get_template(template_name)
 
-    return t.render(template.Context({'top_read': tops,
+    return t.render(template.Context({'top_read': ordered,
                                       'context': context}))

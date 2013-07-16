@@ -1,5 +1,5 @@
 <ol>
-    {% for key, val in top_read.items %}
-    <li>{{ val.article }}</li>
+    {% for top in top_read %}
+    <li>{{ top.article }}</li>
     {% endfor %}
 </ol>
