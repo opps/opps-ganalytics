@@ -6,7 +6,7 @@ install:
    - make install
 env:
   - DJANGO="1.5.x"
-script: make pep8
+script: make test
 notifications:
   irc: "irc.freenode.org#opps"
   on_success: "never"

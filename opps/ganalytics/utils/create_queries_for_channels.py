@@ -17,7 +17,7 @@ for channel in channels:
         filter = Filter(
             field='pagePath',
             operator='=@',
-            expression=u'/'+channel.long_slug,
+            expression=u'/' + channel.long_slug,
             combined='AND'
         )
 
@@ -52,13 +52,3 @@ for channel in channels:
             qf2.save()
         except:
             pass
-
-
-
-
-
-
-
-
-
-
