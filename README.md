@@ -1,7 +1,8 @@
 opps.ganalytics
 ===============
 
-[![Build Status](https://travis-ci.org/oppsproject/opps-ganalytics.png)](https://travis-ci.org/oppsproject/opps-ganalytics)
+[![Build
+Status](https://travis-ci.org/opps/opps-ganalytics.png?branch=master)](https://travis-ci.org/opps/opps-ganalytics)
 
 _Opps Google Analytics Application_
 
