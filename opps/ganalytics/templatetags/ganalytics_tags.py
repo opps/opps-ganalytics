@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from collections import OrderedDict
+
 from django import template
 from django.conf import settings
 from django.db.models import Sum
@@ -70,7 +72,11 @@ def get_channels_top_read(context, *channels, **kwargs):
         if not article.channel_long_slug in tops:
             tops[article.channel_long_slug] = top
 
-    ordered = sorted([val for k, val in tops.iteritems()])
+    ordered = OrderedDict(
+        sorted(tops.items(),
+               key=lambda item: item[1]['pageview__sum'],
+               reverse=True)
+    )
     template_name = kwargs.get('template_name',
                                'ganalytics/channel_top_read.html')
 
