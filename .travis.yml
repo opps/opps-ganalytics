@@ -1,11 +1,11 @@
 language: python
 python:
   - "2.7"
-  - "2.6"
 install:
-   - make install
+  - pip install $DJANGO --use-mirrors
+  - make travis
 env:
-  - DJANGO="1.5.x"
+  - DJANGO=django==1.5
 script: make test
 notifications:
   irc: "irc.freenode.org#opps"

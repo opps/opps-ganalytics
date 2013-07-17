@@ -4,7 +4,7 @@ test: pep8
 
 .PHONY: travis
 travis:
-	pip install -r requirements_dev.txt --use-mirrors
+	pip install -r requirements_test.txt --use-mirrors
 	export OPPS_TRAVIS=True
 	python setup.py develop
 
