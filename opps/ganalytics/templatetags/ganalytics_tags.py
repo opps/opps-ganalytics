@@ -45,6 +45,7 @@ def get_top_read(context, number=10, channel_slug=None, child_class=None,
                                       'number': number,
                                       'context': context}))
 
+
 @register.simple_tag(takes_context=True)
 def get_channels_top_read(context, *channels, **kwargs):
     now = timezone.now()
