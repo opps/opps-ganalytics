@@ -21,7 +21,7 @@ def get_top_read(context, number=10, channel_slug=None, child_class=None,
 
     top_read = Report.objects.filter(
         article__isnull=False,
-        article__date_update__range=(start, now),
+        article__date_available__range=(start, now),
         article__published=True,
     ).order_by('-pageview')
 
@@ -56,7 +56,7 @@ def get_channels_top_read(context, *channels, **kwargs):
     top_read = Report.objects.filter(
         article__isnull=False,
         article__published=True,
-        article__date_update__range=(start, now),
+        article__date_available__range=(start, now),
         article__channel_long_slug__in=channels,
     ).order_by('-pageview')
 
