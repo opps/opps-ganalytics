@@ -26,7 +26,9 @@ def get_top_read(context, number=10, channel_slug=None, child_class=None,
     ).order_by('-pageview')
 
     if channel_slug:
-        top_read = top_read.filter(article__channel_long_slug=channel_slug)
+        top_read = top_read.filter(
+            article__channel_long_slug__icontains=channel_slug
+        )
 
     if child_class:
         top_read = top_read.filter(article__child_class=child_class)
