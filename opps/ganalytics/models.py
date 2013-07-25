@@ -9,7 +9,7 @@ from googleanalytics.account import filter_operators
 from appconf import AppConf
 
 from opps.core.models import Publishable, Date
-from opps.articles.models import Article
+from opps.containers.models import Container
 
 
 FIELDS_FILTER = ['pageviews', 'pagePath']
@@ -105,19 +105,19 @@ class Report(Date):
     entrances = models.IntegerField(default=0)
 
     # Opps join
-    article = models.ForeignKey(
-        'articles.Article',
+    container = models.ForeignKey(
+        'containers.Container',
         null=True,
         blank=True,
-        related_name='report_articles',
+        related_name='report_containers',
         on_delete=models.SET_NULL
     )
 
-    __unicode__ = lambda self: "{} -> {}".format(self.url, self.article)
+    __unicode__ = lambda self: "{} -> {}".format(self.url, self.container)
 
     def save(self, *args, **kwargs):
 
-        self.article = None
+        self.container = None
 
         self.url = self.url.strip()
 
@@ -141,21 +141,21 @@ class Report(Date):
                 _site = redirect.site
                 _slug = redirect.new_path.split('/')[-1]
 
-                articles = Article.objects.filter(
+                containers = Container.objects.filter(
                     slug=_slug,
                     site=_site,
                 )
 
-                for article in articles:
-                    if article.channel.long_slug in redirect.new_path:
-                        self.article = article
+                for container in containers:
+                    if container.channel.long_slug in redirect.new_path:
+                        self.container = container
                         break
 
         except:
             pass
 
         try:
-            if not self.article:
+            if not self.container:
                 url = urlparse(self.url)
                 slug = url.path.split('/')[-1]
                 """
@@ -165,17 +165,17 @@ class Report(Date):
                 """
                 domain = url.netloc
 
-                articles = Article.objects.filter(
+                containers = Container.objects.filter(
                     slug=slug,
                     site_domain=domain,
                     # channel_long_slug=long_slug
                 )
                 # print "model url:", url, slug
-                # print "model articles:", articles
-                for article in articles:
-                    if article.channel.long_slug in url.path:
-                        self.article = article
-                        # print "found:", article
+                # print "model containers:", containers
+                for container in containers:
+                    if container.channel.long_slug in url.path:
+                        self.container = container
+                        # print "found:", container
                         break
         except:
             # print str(e)
