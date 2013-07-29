@@ -5,11 +5,13 @@ from django import template
 from django.conf import settings
 from django.db.models import Sum
 from django.utils import timezone
+
 from opps.ganalytics.models import Report
 from opps.articles.models import Article
-
+from opps.channels.models import Channel
 
 register = template.Library()
+SMART_SEARCH = getattr(settings, 'OPPS_GANALYTICS_SMART_SEARCH', True)
 
 
 @register.simple_tag(takes_context=True)
@@ -26,9 +28,18 @@ def get_top_read(context, number=10, channel_slug=None, child_class=None,
     ).order_by('-pageview')
 
     if channel_slug:
-        top_read = top_read.filter(
-            article__channel_long_slug__icontains=channel_slug
-        )
+        if SMART_SEARCH:
+            channel = channel_slug.split('/')[0]
+            root_channel = Channel.objects.get(slug=channel).root.slug
+
+            # searchs on root and parent channels
+            lookup = dict(
+                article__channel_long_slug__icontains=root_channel
+            )
+        else:
+            # searchs only on current channel
+            lookup = dict(article__channel_long_slug=channel_slug)
+        top_read = top_read.filter(**lookup)
 
     if child_class:
         top_read = top_read.filter(article__child_class=child_class)
