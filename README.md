@@ -10,6 +10,11 @@ _Opps Google Analytics Application_
 * Template tag
 
 
+## Opps
+
+Version: 0.1.x
+
+
 ## Dependencies
 
 * RabbitMQ (Celery)
