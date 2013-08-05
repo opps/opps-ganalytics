@@ -29,6 +29,8 @@ if not settings.configured:
             'django.contrib.redirects',
 
             'opps.core',
+            'opps.containers',
+            'opps.archives',
             'opps.channels',
             'opps.boxes',
             'opps.sources',
@@ -38,7 +40,6 @@ if not settings.configured:
             'opps.flatpages',
 
             'opps.ganalytics',
-            'taggit',
 
         ),
         SITE_ID = 1,
