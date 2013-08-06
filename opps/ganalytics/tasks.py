@@ -25,12 +25,11 @@ def get_accounts():
     accounts = connection.get_accounts()
 
     for a in accounts:
-        # print a
-        obj, create = Account.objects.get_or_create(profile_id=a.profile_id,
+        obj, created = Account.objects.get_or_create(profile_id=a.profile_id,
                                                     account_id=a.account_id,
-                                                    account_name=a.account_name,
-                                                    title=a.title)
-        if not create:
+                                                    account_name=a.account_name)
+
+        if not created:
             obj.account_id = a.account_id
             obj.account_name = a.account_name
             obj.title = a.title
@@ -50,23 +49,15 @@ def get_metadata():
 
     query = Query.objects.filter(date_available__lte=timezone.now(),
                                  published=True)
-    # print query
 
     for q in query:
-        # print q
-        # print connection
         account = connection.get_account('{0}'.format(q.account.profile_id))
-        # print account
-        # print QueryFilter.objects.all()
-        # print q.queryfilter_queries.all()
 
         filters = [[f.filter.field,
                     f.filter.operator,
                     f.filter.expression,
                     f.filter.combined or '']
                    for f in QueryFilter.objects.filter(query=q)]
-
-        # print filters
 
         start_date = datetime.date.today()
         if q.start_date:
@@ -93,14 +84,12 @@ def get_metadata():
 
         for row in data.list:
             try:
-                # print row
-                report, create = Report.objects.get_or_create(url=row[0][1][:255])
-                # print report
+                report, created = Report.objects.get_or_create(url=row[0][1][:255])
+
                 if report:
                     report.pageview = row[1][0]
                     report.timeonpage = row[1][1]
                     report.entrances = row[1][2]
                     report.save()
-                    # print report.article
             except:
                 pass
