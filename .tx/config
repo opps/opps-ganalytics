@@ -1,0 +1,8 @@
+[main]
+host = https://www.transifex.com
+
+[opps.ganalytics]
+file_filter = opps/ganalytics/locale/<lang>/LC_MESSAGES/django.po
+source_file = opps/ganalytics/locale/en/LC_MESSAGES/django.po
+source_lang = en
+
