@@ -44,7 +44,9 @@ def get_accounts():
                                  minute=settings.OPPS_GANALYTICS_RUN_EVERY_MINUTE,
                                  day_of_week=settings.OPPS_GANALYTICS_RUN_EVERY_DAY_OF_WEEK))
 @transaction.commit_on_success
-def get_metadata():
+def get_metadata(verbose=False):
+
+    if verbose: print('getting get_metadata')
     if not settings.OPPS_GANALYTICS_STATUS:
         return None
 
@@ -52,18 +54,30 @@ def get_metadata():
                             settings.OPPS_GANALYTICS_PASSWORD,
                             settings.OPPS_GANALYTICS_APIKEY)
 
+    if verbose: print(connection)
+
+
     query = Query.objects.filter(date_available__lte=timezone.now(),
                                  published=True)
 
+    if verbose: print(query)
+
     for q in query:
         # print  q.name
+        if verbose: print(q.name)
+
         account = connection.get_account('{0}'.format(q.account.profile_id))
+
+        if verbose: print(account)
 
         filters = [[f.filter.field,
                     f.filter.operator,
                     f.filter.expression,
                     f.filter.combined or '']
                    for f in QueryFilter.objects.filter(query=q)]
+
+        if verbose: print(filters)
+
 
         start_date = datetime.date.today()
         if q.start_date:
@@ -89,10 +103,20 @@ def get_metadata():
             count_data = len(data)
 
         # print  len(data.list)
+        if verbose: print(len(data.list))
+
 
         for row in data.list:
+            if verbose: print("ROW:")
+            if verbose: print(row)
+
             try:
                 url = row[0][1][:255]
+                if verbose: print("URL:")
+                if verbose: print(url)
+
+                if url.startswith('/'):
+                    url = 'http://jovempan.uol.com.br' + url
 
                 if not url.startswith("http"):
                     url = "http://" + url
