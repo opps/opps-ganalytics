@@ -125,14 +125,22 @@ def get_metadata(verbose=False):
 
                 url = "{url.scheme}://{url.netloc}{url.path}".format(url=_url)
                 # print  url
+                if verbose: print(url)
+
 
                 report, create = Report.objects.get_or_create(url=url)
+                if verbose: print(report)
+                if verbose: print(create)
+
                 if report:
                     report.pageview = row[1][0]
                     report.timeonpage = row[1][1]
                     report.entrances = row[1][2]
                     report.save()
                     # print  report.article
-            except:
+                    if verbose: print(report.article)
+
+            except Exception as e:
+                if verbose: print(str(e))
                 # # print  str(e)
                 pass
