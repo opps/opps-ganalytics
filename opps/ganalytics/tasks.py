@@ -6,8 +6,9 @@ from django.utils import timezone
 from django.conf import settings
 from django.db import transaction
 
-from celery.decorators import periodic_task
-from celery.task.schedules import crontab
+import celery
+# from celery.decorators import periodic_task
+# from celery.task.schedules import crontab
 from googleanalytics import Connection
 
 from .models import Query, QueryFilter, Report, Account
@@ -22,10 +23,12 @@ def log_it(s):
         pass
 
 
-@periodic_task(run_every=crontab(hour=settings.OPPS_GANALYTICS_RUN_EVERY_HOUR,
-                                 minute=settings.OPPS_GANALYTICS_RUN_EVERY_MINUTE,
-                                 day_of_week=settings.OPPS_GANALYTICS_RUN_EVERY_DAY_OF_WEEK))
+# @periodic_task(run_every=crontab(hour=settings.OPPS_GANALYTICS_RUN_EVERY_HOUR,
+#                                  minute=settings.OPPS_GANALYTICS_RUN_EVERY_MINUTE,
+#                                  day_of_week=settings.OPPS_GANALYTICS_RUN_EVERY_DAY_OF_WEEK))
+
 @transaction.commit_on_success
+@celery.task.periodic_task(run_every=timezone.timedelta(minutes=30))
 def get_accounts():
     if not settings.OPPS_GANALYTICS_STATUS:
         return None
@@ -51,10 +54,11 @@ def get_accounts():
     log_it("get_accounts")
 
 
-@periodic_task(run_every=crontab(hour=settings.OPPS_GANALYTICS_RUN_EVERY_HOUR,
-                                 minute=settings.OPPS_GANALYTICS_RUN_EVERY_MINUTE,
-                                 day_of_week=settings.OPPS_GANALYTICS_RUN_EVERY_DAY_OF_WEEK))
+# @periodic_task(run_every=crontab(hour=settings.OPPS_GANALYTICS_RUN_EVERY_HOUR,
+#                                  minute=settings.OPPS_GANALYTICS_RUN_EVERY_MINUTE,
+#                                  day_of_week=settings.OPPS_GANALYTICS_RUN_EVERY_DAY_OF_WEEK))
 @transaction.commit_on_success
+@celery.task.periodic_task(run_every=timezone.timedelta(minutes=60))
 def get_metadata(verbose=False):
 
     if verbose: print('getting get_metadata')
