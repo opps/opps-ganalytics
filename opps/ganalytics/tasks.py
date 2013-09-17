@@ -152,8 +152,8 @@ def get_metadata(verbose=False):
                     report.timeonpage = row[1][1]
                     report.entrances = row[1][2]
                     report.save()
-                    # print  report.article
-                    if verbose: print(report.article)
+                    # print  report.container
+                    if verbose: print(report.container)
 
             except Exception as e:
                 if verbose: print(str(e))
