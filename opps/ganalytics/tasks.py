@@ -5,6 +5,7 @@ from urlparse import urlparse
 from django.utils import timezone
 from django.conf import settings
 from django.db import transaction
+from django.contrib.sites.models import Site
 
 import celery
 # from celery.decorators import periodic_task
@@ -40,7 +41,6 @@ def get_accounts():
     accounts = connection.get_accounts()
 
     for a in accounts:
-        # # # print  a
         obj, create = Account.objects.get_or_create(profile_id=a.profile_id,
                                                     account_id=a.account_id,
                                                     account_name=a.account_name,
@@ -71,6 +71,8 @@ def get_metadata(verbose=False):
 
     if verbose: print(connection)
 
+    default_site = Site.objects.get(pk=1)
+    default_domain = 'http://' + default_site.domain
 
     query = Query.objects.filter(date_available__lte=timezone.now(),
                                  published=True)
@@ -131,7 +133,7 @@ def get_metadata(verbose=False):
                 if verbose: print(url)
 
                 if url.startswith('/'):
-                    url = 'http://jovempan.uol.com.br' + url
+                    url = default_domain + url
 
                 if not url.startswith("http"):
                     url = "http://" + url
@@ -139,7 +141,6 @@ def get_metadata(verbose=False):
                 _url = urlparse(url)
 
                 url = "{url.scheme}://{url.netloc}{url.path}".format(url=_url)
-                # print  url
                 if verbose: print(url)
 
 
@@ -152,12 +153,11 @@ def get_metadata(verbose=False):
                     report.timeonpage = row[1][1]
                     report.entrances = row[1][2]
                     report.save()
-                    # print  report.container
+                    if verbose: print("CONTAINER:")
                     if verbose: print(report.container)
 
             except Exception as e:
                 if verbose: print(str(e))
-                # # print  str(e)
                 pass
 
     log_it("get_metadata")

@@ -140,6 +140,8 @@ class Report(Date):
                 redirect = redirects[0]
                 _site = redirect.site
                 _slug = redirect.new_path.split('/')[-1]
+                if _slug.endswith('.html'):
+                    _slug = _slug.replace('.html', '')
 
                 containers = Container.objects.filter(
                     slug=_slug,
@@ -157,7 +159,11 @@ class Report(Date):
         try:
             if not self.container:
                 url = urlparse(self.url)
+
                 slug = url.path.split('/')[-1]
+                if slug.endswith('.html'):
+                    slug = slug.replace('.html', '')
+
                 """
                 long_slug = '/'.join(url.path.split('/')[:-1]).partition('/')[-1]
                 # The long slug above does not works because of links liks
@@ -170,8 +176,8 @@ class Report(Date):
                     site_domain=domain,
                     # channel_long_slug=long_slug
                 )
-                # print "model url:", url, slug
-                # print "model containers:", containers
+                #print "#### model url:", url, slug
+                #print "### model containers:", containers
                 for container in containers:
                     if container.channel.long_slug in url.path:
                         self.container = container
