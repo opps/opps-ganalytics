@@ -33,7 +33,6 @@ if not settings.configured:
             'opps.archives',
             'opps.channels',
             'opps.boxes',
-            'opps.sources',
             'opps.articles',
             'opps.images',
             'opps.sitemaps',

@@ -61,7 +61,9 @@ def get_accounts():
 @celery.task.periodic_task(run_every=timezone.timedelta(minutes=60))
 def get_metadata(verbose=False):
 
-    if verbose: print('getting get_metadata')
+    if verbose:
+        print('getting get_metadata')
+
     if not settings.OPPS_GANALYTICS_STATUS:
         return None
 
@@ -69,7 +71,8 @@ def get_metadata(verbose=False):
                             settings.OPPS_GANALYTICS_PASSWORD,
                             settings.OPPS_GANALYTICS_APIKEY)
 
-    if verbose: print(connection)
+    if verbose:
+        print(connection)
 
     default_site = Site.objects.get(pk=1)
     default_domain = 'http://' + default_site.domain
@@ -77,15 +80,17 @@ def get_metadata(verbose=False):
     query = Query.objects.filter(date_available__lte=timezone.now(),
                                  published=True)
 
-    if verbose: print(query)
+    if verbose:
+        print(query)
 
     for q in query:
-        # print  q.name
-        if verbose: print(q.name)
+        if verbose:
+            print(q.name)
 
         account = connection.get_account('{0}'.format(q.account.profile_id))
 
-        if verbose: print(account)
+        if verbose:
+            print(account)
 
         filters = [[f.filter.field,
                     f.filter.operator,
@@ -93,8 +98,8 @@ def get_metadata(verbose=False):
                     f.filter.combined or '']
                    for f in QueryFilter.objects.filter(query=q)]
 
-        if verbose: print(filters)
-
+        if verbose:
+            print(filters)
 
         start_date = datetime.date.today()
         if q.start_date:
@@ -120,17 +125,19 @@ def get_metadata(verbose=False):
             count_data = len(data)
 
         # print  len(data.list)
-        if verbose: print(len(data.list))
-
+        if verbose:
+            print(len(data.list))
 
         for row in data.list:
-            if verbose: print("ROW:")
-            if verbose: print(row)
+            if verbose:
+                print("ROW:")
+                print(row)
 
             try:
                 url = row[0][1][:255]
-                if verbose: print("URL:")
-                if verbose: print(url)
+                if verbose:
+                    print("URL:")
+                    print(url)
 
                 if url.startswith('/'):
                     url = default_domain + url
@@ -141,23 +148,27 @@ def get_metadata(verbose=False):
                 _url = urlparse(url)
 
                 url = "{url.scheme}://{url.netloc}{url.path}".format(url=_url)
-                if verbose: print(url)
+                if verbose:
+                    print(url)
 
 
                 report, create = Report.objects.get_or_create(url=url)
-                if verbose: print(report)
-                if verbose: print(create)
+                if verbose:
+                    print(report)
+                    print(create)
 
                 if report:
                     report.pageview = row[1][0]
                     report.timeonpage = row[1][1]
                     report.entrances = row[1][2]
                     report.save()
-                    if verbose: print("CONTAINER:")
-                    if verbose: print(report.container)
+                    if verbose:
+                        print("CONTAINER:")
+                        print(report.container)
 
             except Exception as e:
-                if verbose: print(str(e))
+                if verbose:
+                    print(str(e))
                 pass
 
     log_it("get_metadata")
