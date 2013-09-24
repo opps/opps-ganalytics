@@ -115,6 +115,25 @@ class Report(Date):
 
     __unicode__ = lambda self: "{} -> {}".format(self.url, self.container)
 
+
+    def _find_redirects(self, key):
+        """
+        key can be old_path or new_path
+        """
+        lookup = {}
+        lookup[key] = self.url
+        redirects = Redirect.objects.filter(**lookup)
+
+        # try without scheme://domain
+        if not redirects:
+            _url = urlparse(self.url)
+            lookup[key] = _url.path
+            redirects = Redirect.objects.filter(**lookup)
+
+        return redirects
+
+
+
     def save(self, *args, **kwargs):
 
         self.container = None
@@ -125,16 +144,9 @@ class Report(Date):
             self.url = "http://{}".format(self.url)
 
         try:
-            redirects = Redirect.objects.filter(
-                old_path=self.url,
-            )
-
-            # try without scheme://domain
+            redirects = self._find_redirects('old_path')
             if not redirects:
-                _url = urlparse(self.url)
-                redirects = Redirect.objects.filter(
-                    old_path=_url.path
-                )
+                redirects = self._find_redirects('new_path')
 
             if redirects:
                 redirect = redirects[0]
@@ -143,15 +155,20 @@ class Report(Date):
                 if _slug.endswith('.html'):
                     _slug = _slug.replace('.html', '')
 
-                containers = Container.objects.filter(
-                    slug=_slug,
-                    site=_site,
-                )
+                if _slug:
+                    containers = Container.objects.filter(
+                        slug=_slug,
+                        site=_site,
+                    )
 
-                for container in containers:
-                    if container.channel.long_slug in redirect.new_path:
-                        self.container = container
-                        break
+                    for container in containers:
+                        print "Comparando %s com %s" % (
+                            container.channel.long_slug,
+                            redirect.new_path
+                        )
+                        if container.channel.long_slug in redirect.new_path:
+                            self.container = container
+                            break
 
         except:
             pass
@@ -169,20 +186,24 @@ class Report(Date):
                 # The long slug above does not works because of links liks
                 # /album, /video, /link etc..
                 """
-                domain = url.netloc
+                if slug:
+                    domain = url.netloc
+                    containers = Container.objects.filter(
+                        slug=slug,
+                        site_domain=domain,
+                    )
+                    # print "#### model url:", url, slug
+                    # print "### model containers:", containers
+                    for container in containers:
+                        print "Comparando %s com %s" % (
+                            container.channel.long_slug,
+                            url.path
+                        )
 
-                containers = Container.objects.filter(
-                    slug=slug,
-                    site_domain=domain,
-                    # channel_long_slug=long_slug
-                )
-                #print "#### model url:", url, slug
-                #print "### model containers:", containers
-                for container in containers:
-                    if container.channel.long_slug in url.path:
-                        self.container = container
-                        # print "found:", container
-                        break
+                        if container.channel.long_slug in url.path:
+                            self.container = container
+                            print "Found Container:", container
+                            break
         except:
             # print str(e)
             pass
