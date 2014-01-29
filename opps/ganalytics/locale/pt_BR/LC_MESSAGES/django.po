@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-10 11:28-0300\n"
+"POT-Creation-Date: 2014-01-29 15:40-0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,78 +38,78 @@ msgstr "Expressão Regular"
 msgid "Combined"
 msgstr "Combinado"
 
-#: models.py:50 models.py:61 models.py:92
+#: models.py:49 models.py:60
 msgid "Filter"
 msgstr "Filtro"
 
-#: models.py:51 models.py:93
+#: models.py:50
 msgid "Filters"
 msgstr "Filtros"
 
-#: models.py:56 models.py:96
+#: models.py:55 models.py:90
 msgid "Query"
 msgstr "Query"
 
-#: models.py:65
+#: models.py:64
 msgid "Order"
 msgstr "Ordem"
 
-#: models.py:72
+#: models.py:70
 msgid "Query Filter"
 msgstr "Filtro de Query"
 
-#: models.py:73
+#: models.py:71
 msgid "Query Filters"
 msgstr "Filtros de Query"
 
-#: models.py:77
+#: models.py:75
 msgid "Name"
 msgstr "Nome"
 
-#: models.py:79
+#: models.py:77
 msgid "Start date"
 msgstr "Data Inicial"
 
-#: models.py:80
+#: models.py:78
 msgid "End date"
 msgstr "Data Final"
 
-#: models.py:81
+#: models.py:79
 msgid "Metrics"
 msgstr "Métricas"
 
-#: models.py:97
+#: models.py:91
 msgid "Queries"
 msgstr "Queries"
 
-#: models.py:101
+#: models.py:95
 msgid "URL"
 msgstr "URL"
 
-#: models.py:107
+#: models.py:101
 msgid "Time on page"
 msgstr "Tempo na página"
 
-#: models.py:194
+#: models.py:215
 msgid "Report"
 msgstr "Relatório"
 
-#: models.py:195
+#: models.py:216
 msgid "Reports"
 msgstr "Relatórios"
 
-#: models.py:201
+#: models.py:222
 msgid "Account name"
 msgstr "Nome da Conta"
 
-#: models.py:204
+#: models.py:225
 msgid "Title"
 msgstr "Título"
 
-#: models.py:211
+#: models.py:232
 msgid "Account"
 msgstr "Conta"
 
-#: models.py:212
+#: models.py:233
 msgid "Accounts"
 msgstr "Contas"
