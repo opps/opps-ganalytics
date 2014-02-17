@@ -1,2 +1,2 @@
 -e git+https://github.com/opps/opps.git@stable/0.1.x#egg=opps
--e git+git@github.com:avelino/python-googleanalytics.git#egg=python-googleanalytics
+-e git+git@github.com:avelino/python-googleanalytics.git#egg=python-googleanalytics-1.0.3
