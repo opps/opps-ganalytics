@@ -113,7 +113,9 @@ def get_channels_top_read(context, *channels, **kwargs):
         tops[channel] = top_read
 
     ordered = OrderedDict(
-        sorted(tops.items(), key=lambda item: item[1].pageview, reverse=True)
+        sorted(tops.items(),
+               key=lambda item: item[1].pageview if item[1] else 0,
+               reverse=True)
     )
     template_name = kwargs.get('template_name',
                                'ganalytics/channel_top_read.html')

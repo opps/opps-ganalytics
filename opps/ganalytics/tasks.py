@@ -26,8 +26,7 @@ def get_accounts():
 
     for a in accounts:
         obj, created = Account.objects.get_or_create(profile_id=a.profile_id,
-                                                    account_id=a.account_id,
-                                                    account_name=a.account_name)
+                                                    account_id=a.account_id)
 
         if not created:
             obj.account_id = a.account_id
