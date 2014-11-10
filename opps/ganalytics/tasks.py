@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
+from ssl import SSLError
 from urlparse import urlparse
 
 from django.utils import timezone
@@ -12,15 +13,6 @@ from googleanalytics import Connection
 
 from .models import Query, QueryFilter, Report, Account
 from .conf import settings
-
-
-def log_it(s):
-    try:
-        open("/tmp/ganalitcs_task_run.log", "a").write(
-            u"{now} - {s}\n".format(now=datetime.datetime.now(), s=s)
-        )
-    except:
-        pass
 
 
 @transaction.commit_on_success
@@ -40,17 +32,17 @@ def get_accounts():
     accounts = connection.get_accounts()
 
     for a in accounts:
-        obj, create = Account.objects.get_or_create(profile_id=a.profile_id,
-                                                    account_id=a.account_id,
-                                                    account_name=a.account_name,
-                                                    title=a.title)
+        obj, create = Account.objects.get_or_create(
+            profile_id=a.profile_id,
+            account_id=a.account_id,
+            account_name=a.account_name,
+            title=a.title
+        )
         if not create:
             obj.account_id = a.account_id
             obj.account_name = a.account_name
             obj.title = a.title
             obj.save()
-
-    log_it("get_accounts")
 
 
 @transaction.commit_on_success
@@ -58,8 +50,9 @@ def get_accounts():
     run_every=crontab(
         hour=settings.OPPS_GANALYTICS_RUN_EVERY_HOUR,
         minute=settings.OPPS_GANALYTICS_RUN_EVERY_MINUTE,
-        day_of_week=settings.OPPS_GANALYTICS_RUN_EVERY_DAY_OF_WEEK))
-def get_metadata(verbose=False):
+        day_of_week=settings.OPPS_GANALYTICS_RUN_EVERY_DAY_OF_WEEK),
+    bind=True)
+def get_metadata(self, verbose=False):
 
     if verbose:
         print('getting get_metadata')
@@ -117,9 +110,13 @@ def get_metadata(verbose=False):
         data = []
         count_data = len(data)
         while count_data == 0:
-            data = account.get_data(start_date, end_date, metrics=metrics,
-                                    dimensions=dimensions, filters=filters,
-                                    max_results=1000, sort=['-pageviews'])
+            try:
+                data = account.get_data(start_date, end_date, metrics=metrics,
+                                        dimensions=dimensions, filters=filters,
+                                        max_results=1000, sort=['-pageviews'])
+            except SSLError as exc:
+                raise self.retry(exc=exc)
+
             start_date -= datetime.timedelta(days=1)
             end_date -= datetime.timedelta(days=1)
             count_data = len(data)
@@ -151,7 +148,6 @@ def get_metadata(verbose=False):
                 if verbose:
                     print(url)
 
-
                 report, create = Report.objects.get_or_create(url=url)
                 if verbose:
                     print(report)
@@ -170,5 +166,3 @@ def get_metadata(verbose=False):
                 if verbose:
                     print(str(e))
                 pass
-
-    log_it("get_metadata")
