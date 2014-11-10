@@ -40,10 +40,12 @@ def get_accounts():
     accounts = connection.get_accounts()
 
     for a in accounts:
-        obj, create = Account.objects.get_or_create(profile_id=a.profile_id,
-                                                    account_id=a.account_id,
-                                                    account_name=a.account_name,
-                                                    title=a.title)
+        obj, create = Account.objects.get_or_create(
+            profile_id=a.profile_id,
+            account_id=a.account_id,
+            account_name=a.account_name,
+            title=a.title
+        )
         if not create:
             obj.account_id = a.account_id
             obj.account_name = a.account_name
@@ -150,7 +152,6 @@ def get_metadata(verbose=False):
                 url = "{url.scheme}://{url.netloc}{url.path}".format(url=_url)
                 if verbose:
                     print(url)
-
 
                 report, create = Report.objects.get_or_create(url=url)
                 if verbose:
