@@ -14,15 +14,6 @@ from .models import Query, QueryFilter, Report, Account
 from .conf import settings
 
 
-def log_it(s):
-    try:
-        open("/tmp/ganalitcs_task_run.log", "a").write(
-            u"{now} - {s}\n".format(now=datetime.datetime.now(), s=s)
-        )
-    except:
-        pass
-
-
 @transaction.commit_on_success
 @periodic_task(
     run_every=crontab(
@@ -51,8 +42,6 @@ def get_accounts():
             obj.account_name = a.account_name
             obj.title = a.title
             obj.save()
-
-    log_it("get_accounts")
 
 
 @transaction.commit_on_success
@@ -171,5 +160,3 @@ def get_metadata(verbose=False):
                 if verbose:
                     print(str(e))
                 pass
-
-    log_it("get_metadata")
