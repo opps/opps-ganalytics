@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
+from ssl import SSLError
 from urlparse import urlparse
 
 from django.utils import timezone
@@ -49,8 +50,9 @@ def get_accounts():
     run_every=crontab(
         hour=settings.OPPS_GANALYTICS_RUN_EVERY_HOUR,
         minute=settings.OPPS_GANALYTICS_RUN_EVERY_MINUTE,
-        day_of_week=settings.OPPS_GANALYTICS_RUN_EVERY_DAY_OF_WEEK))
-def get_metadata(verbose=False):
+        day_of_week=settings.OPPS_GANALYTICS_RUN_EVERY_DAY_OF_WEEK),
+    bind=True)
+def get_metadata(self, verbose=False):
 
     if verbose:
         print('getting get_metadata')
@@ -108,9 +110,13 @@ def get_metadata(verbose=False):
         data = []
         count_data = len(data)
         while count_data == 0:
-            data = account.get_data(start_date, end_date, metrics=metrics,
-                                    dimensions=dimensions, filters=filters,
-                                    max_results=1000, sort=['-pageviews'])
+            try:
+                data = account.get_data(start_date, end_date, metrics=metrics,
+                                        dimensions=dimensions, filters=filters,
+                                        max_results=1000, sort=['-pageviews'])
+            except SSLError as exc:
+                raise self.retry(exc=exc)
+
             start_date -= datetime.timedelta(days=1)
             end_date -= datetime.timedelta(days=1)
             count_data = len(data)
