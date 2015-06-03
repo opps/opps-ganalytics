@@ -14,12 +14,11 @@ class OppsGAnalyticsConf(AppConf):
     RUN_EVERY_DAY_OF_WEEK = getattr(
         settings, 'OPPS_GANALYTICS_RUN_EVERY_DAY_OF_WEEK', "*")
 
-    ACCOUNT = getattr(
-        settings, "OPPS_GANALYTICS_ACCOUNT", "")
-    PASSWORD = getattr(
-        settings, "OPPS_GANALYTICS_PASSWORD", "")
-    APIKEY = getattr(
-        settings, "OPPS_GANALYTICS_APIKEY", "")
+    CLIENT_ACCOUNT = getattr(
+        settings, "OPPS_GANALYTICS_CLIENT_ACCOUNT", "")
+
+    CLIENT_PRIVATE_KEY = getattr(
+        settings, "OPPS_GANALYTICS_CLIENT_PRIVATE_KEY", "")
 
     class Meta:
         prefix = 'opps_ganalytics'
