@@ -2,6 +2,7 @@
 import datetime
 from ssl import SSLError
 from urlparse import urlparse
+from httplib2 import Http
 
 from django.utils import timezone
 from django.db import transaction
@@ -9,10 +10,24 @@ from django.contrib.sites.models import Site
 
 from celery.decorators import periodic_task
 from celery.task.schedules import crontab
-from googleanalytics import Connection
+from oauth2client.client import SignedJwtAssertionCredentials
+from apiclient.discovery import build
 
 from .models import Query, QueryFilter, Report, Account
 from .conf import settings
+
+
+def ga_factory():
+    """
+    Returns googleapi object using server-side authentication."""
+
+    with open(settings.OPPS_GANALYTICS_PRIVATE_KEY) as f:
+        private_key = f.read()
+    credentials = SignedJwtAssertionCredentials(
+        settings.OPPS_GANALYTICS_ACCOUNT, private_key,
+        'https://www.googleapis.com/auth/analytics.readonly')
+    http_auth = credentials.authorize(Http())
+    return build('analytics', 'v3', http=http_auth)
 
 
 @transaction.commit_on_success
@@ -25,24 +40,27 @@ def get_accounts():
     if not settings.OPPS_GANALYTICS_STATUS:
         return None
 
-    connection = Connection(settings.OPPS_GANALYTICS_ACCOUNT,
-                            settings.OPPS_GANALYTICS_PASSWORD,
-                            settings.OPPS_GANALYTICS_APIKEY)
+    ga = ga_factory()
 
-    accounts = connection.get_accounts()
+    accounts = ga.management().accounts().list().execute()
 
-    for a in accounts:
-        obj, create = Account.objects.get_or_create(
-            profile_id=a.profile_id,
-            account_id=a.account_id,
-            account_name=a.account_name,
-            title=a.title
-        )
-        if not create:
-            obj.account_id = a.account_id
-            obj.account_name = a.account_name
-            obj.title = a.title
-            obj.save()
+    # Verify all available accounts
+    for a in accounts.get('items'):
+        profiles = ga.management().profiles().list(
+            accountId=a['id'], webPropertyId='~all').execute()
+
+        # Verify all available profiles into account
+        for p in profiles.get('items'):
+
+            # Create account/profile if not exists.
+            obj, create = Account.objects.get_or_create(
+                account_id=a['id'], profile_id=p['id'])
+
+            # Update their titles
+            if not create:
+                obj.account_name = a['name']
+                obj.title = p['name']
+                obj.save()
 
 
 @transaction.commit_on_success
@@ -59,6 +77,8 @@ def get_metadata(self, verbose=False):
 
     if not settings.OPPS_GANALYTICS_STATUS:
         return None
+
+    ga = ga_factory()
 
     connection = Connection(settings.OPPS_GANALYTICS_ACCOUNT,
                             settings.OPPS_GANALYTICS_PASSWORD,
