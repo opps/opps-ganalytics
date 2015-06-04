@@ -16,10 +16,9 @@ class OppsGAnalyticsConf(AppConf):
 
     ACCOUNT = getattr(
         settings, "OPPS_GANALYTICS_ACCOUNT", "")
-    PASSWORD = getattr(
-        settings, "OPPS_GANALYTICS_PASSWORD", "")
-    APIKEY = getattr(
-        settings, "OPPS_GANALYTICS_APIKEY", "")
+
+    PRIVATE_KEY = getattr(
+        settings, "OPPS_GANALYTICS_PRIVATE_KEY", "")
 
     class Meta:
         prefix = 'opps_ganalytics'

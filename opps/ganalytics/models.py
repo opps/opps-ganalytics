@@ -5,11 +5,12 @@ from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django.contrib.redirects.models import Redirect
 
-from googleanalytics.account import filter_operators
 from appconf import AppConf
 
 from opps.core.models import Publishable, Date
 from opps.containers.models import Container
+
+from .utils import process_filters, FILTER_OPERATORS
 
 
 FIELDS_FILTER = ['pageviews', 'pagePath']
@@ -32,8 +33,8 @@ class GAnalyticsConf(AppConf):
 class Filter(Date):
     field = models.CharField(_(u"Field"), max_length=50,
                              choices=zip(FIELDS_FILTER, FIELDS_FILTER))
-    operator = models.CharField(_(u"Operator"), choices=zip(filter_operators,
-                                                            filter_operators),
+    operator = models.CharField(_(u"Operator"), choices=zip(FILTER_OPERATORS,
+                                                            FILTER_OPERATORS),
                                 max_length=3)
     expression = models.CharField(_(u"Expression"), max_length=255,
                                   help_text=_(u'Regular expression'))
@@ -83,6 +84,15 @@ class Query(Publishable):
                                     blank=True, related_name='query_filters',
                                     through='ganalytics.QueryFilter')
 
+    def formatted_filters(self):
+        filters = [[
+            f.field,
+            f.operator,
+            f.expression,
+            f.combined or ''] for f in self.filter.all()]
+
+        return process_filters(filters)
+
     def __unicode__(self):
         return u"{0}-{1}".format(self.account.title, self.name)
 
@@ -115,7 +125,6 @@ class Report(Date):
 
     __unicode__ = lambda self: "{} -> {}".format(self.url, self.container)
 
-
     def _find_redirects(self, key):
         """
         key can be old_path or new_path
@@ -131,8 +140,6 @@ class Report(Date):
             redirects = Redirect.objects.filter(**lookup)
 
         return redirects
-
-
 
     def save(self, *args, **kwargs):
 
@@ -209,7 +216,6 @@ class Report(Date):
             pass
 
         super(Report, self).save(*args, **kwargs)
-
 
     class Meta:
         verbose_name = _(u'Report')
