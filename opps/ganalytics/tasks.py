@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+
+from __future__ import unicode_literals
+
 import datetime
-from ssl import SSLError
 from urlparse import urlparse
 from httplib2 import Http
 
@@ -71,21 +73,10 @@ def get_accounts():
         day_of_week=settings.OPPS_GANALYTICS_RUN_EVERY_DAY_OF_WEEK),
     bind=True)
 def get_metadata(self, verbose=False):
-
-    if verbose:
-        print('getting get_metadata')
-
     if not settings.OPPS_GANALYTICS_STATUS:
         return None
 
     ga = ga_factory()
-
-    connection = Connection(settings.OPPS_GANALYTICS_ACCOUNT,
-                            settings.OPPS_GANALYTICS_PASSWORD,
-                            settings.OPPS_GANALYTICS_APIKEY)
-
-    if verbose:
-        print(connection)
 
     default_site = Site.objects.get(pk=1)
     default_domain = 'http://' + default_site.domain
@@ -93,96 +84,69 @@ def get_metadata(self, verbose=False):
     query = Query.objects.filter(date_available__lte=timezone.now(),
                                  published=True)
 
-    if verbose:
-        print(query)
-
     for q in query:
-        if verbose:
-            print(q.name)
+        params = {'ids': 'ga:{0}'.format(q.account.profile_id)}
 
-        account = connection.get_account('{0}'.format(q.account.profile_id))
+        filters = q.formatted_filters()
 
-        if verbose:
-            print(account)
+        if filters:
+            params['filters'] = filters
 
-        filters = [[f.filter.field,
-                    f.filter.operator,
-                    f.filter.expression,
-                    f.filter.combined or '']
-                   for f in QueryFilter.objects.filter(query=q)]
-
-        if verbose:
-            print(filters)
-
-        start_date = datetime.date.today()
+        params['start_date'] = datetime.date.today()
         if q.start_date:
-            start_date = datetime.date(q.start_date.year,
-                                       q.start_date.month,
-                                       q.start_date.day)
-        end_date = datetime.date.today()
+            params['start_date'] = datetime.date(q.start_date.year,
+                                                 q.start_date.month,
+                                                 q.start_date.day)
+
+        params['end_date'] = datetime.date.today()
         if q.end_date:
-            end_date = datetime.date(q.end_date.year,
-                                     q.end_date.month,
-                                     q.end_date.day)
-        metrics = ['pageviews', 'timeOnPage', 'entrances']
-        dimensions = ['pageTitle', 'pagePath']
+            params['end_date'] = datetime.date(q.end_date.year,
+                                               q.end_date.month,
+                                               q.end_date.day)
+
+        params['metrics'] = 'ga:pageviews,ga:timeOnPage,ga:entrances'
+        params['dimensions'] = 'ga:pageTitle,ga:pagePath'
+        params['sort'] = '-ga:pageviews'
+        params['max_results'] = 10000
+
+        def cleanup_params(params):
+            p = params.copy()
+            for k in p:
+                if not isinstance(p[k], basestring):
+                    p[k] = unicode(p[k])
+            return p
 
         data = []
-        count_data = len(data)
+        count_data = 0
         while count_data == 0:
-            try:
-                data = account.get_data(start_date, end_date, metrics=metrics,
-                                        dimensions=dimensions, filters=filters,
-                                        max_results=1000, sort=['-pageviews'])
-            except SSLError as exc:
-                raise self.retry(exc=exc)
+            data = ga.data().ga().get(**cleanup_params(params)).execute()
 
-            start_date -= datetime.timedelta(days=1)
-            end_date -= datetime.timedelta(days=1)
-            count_data = len(data)
+            params['start_date'] -= datetime.timedelta(days=1)
+            params['end_date'] -= datetime.timedelta(days=1)
 
-        # print  len(data.list)
-        if verbose:
-            print(len(data.list))
+            count_data = data['totalResults']
 
-        for row in data.list:
-            if verbose:
-                print("ROW:")
-                print(row)
+        import ipdb; ipdb.set_trace()
 
-            try:
-                url = row[0][1][:255]
-                if verbose:
-                    print("URL:")
-                    print(url)
+        TITLE, URL, PAGEVIEWS, TIMEONPAGE, ENTRANCES = 0, 1, 2, 3, 4
 
-                if url.startswith('/'):
-                    url = default_domain + url
+        for row in data.get('rows', []):
+            url = row[URL][:255]
 
-                if not url.startswith("http"):
-                    url = "http://" + url
+            if url.startswith('/'):
+                url = default_domain + url
 
-                _url = urlparse(url)
+            if not url.startswith("http"):
+                url = "http://" + url
 
-                url = "{url.scheme}://{url.netloc}{url.path}".format(url=_url)
-                if verbose:
-                    print(url)
+            _url = urlparse(url)
 
-                report, create = Report.objects.get_or_create(url=url)
-                if verbose:
-                    print(report)
-                    print(create)
+            url = "{url.scheme}://{url.netloc}{url.path}".format(url=_url)
 
-                if report:
-                    report.pageview = row[1][0]
-                    report.timeonpage = row[1][1]
-                    report.entrances = row[1][2]
-                    report.save()
-                    if verbose:
-                        print("CONTAINER:")
-                        print(report.container)
+            report, create = Report.objects.get_or_create(url=url)
 
-            except Exception as e:
-                if verbose:
-                    print(str(e))
-                pass
+            if report:
+                report.pageview = row[PAGEVIEWS]
+                report.timeonpage = row[TIMEONPAGE]
+                report.entrances = row[ENTRANCES]
+                report.save()
