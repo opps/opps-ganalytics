@@ -5,8 +5,7 @@ from setuptools import setup, find_packages
 
 from opps import ganalytics
 
-install_requires = ["opps", "django-celery", "python-googleanalytics"]
-dependency_links = ['http://github.com/jsma/python-googleanalytics/tarball/master#egg=python-googleanalytics']
+install_requires = ["opps", "django-celery", "google-api-python-client"]
 
 classifiers = ["Development Status :: 4 - Beta",
                "Intended Audience :: Developers",
@@ -34,7 +33,5 @@ setup(
     author=ganalytics.__author__,
     author_email=ganalytics.__email__,
     packages=find_packages(exclude=('doc', 'docs',)),
-    install_requires=install_requires,
-    dependency_links=dependency_links,
-    include_package_data=True,
+    install_requires=install_requires
 )

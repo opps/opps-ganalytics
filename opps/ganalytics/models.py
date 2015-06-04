@@ -5,13 +5,12 @@ from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django.contrib.redirects.models import Redirect
 
-from googleanalytics.account import filter_operators
 from appconf import AppConf
 
 from opps.core.models import Publishable, Date
 from opps.containers.models import Container
 
-from .utils import process_filters
+from .utils import process_filters, FILTER_OPERATORS
 
 
 FIELDS_FILTER = ['pageviews', 'pagePath']
@@ -34,8 +33,8 @@ class GAnalyticsConf(AppConf):
 class Filter(Date):
     field = models.CharField(_(u"Field"), max_length=50,
                              choices=zip(FIELDS_FILTER, FIELDS_FILTER))
-    operator = models.CharField(_(u"Operator"), choices=zip(filter_operators,
-                                                            filter_operators),
+    operator = models.CharField(_(u"Operator"), choices=zip(FILTER_OPERATORS,
+                                                            FILTER_OPERATORS),
                                 max_length=3)
     expression = models.CharField(_(u"Expression"), max_length=255,
                                   help_text=_(u'Regular expression'))

@@ -126,8 +126,6 @@ def get_metadata(self, verbose=False):
 
             count_data = data['totalResults']
 
-        import ipdb; ipdb.set_trace()
-
         TITLE, URL, PAGEVIEWS, TIMEONPAGE, ENTRANCES = 0, 1, 2, 3, 4
 
         for row in data.get('rows', []):

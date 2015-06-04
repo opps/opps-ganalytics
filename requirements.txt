@@ -1,2 +1,2 @@
 opps
--e git+https://github.com/jsma/python-googleanalytics#egg=python-ganalytics
+google-api-python-client==1.4.0
