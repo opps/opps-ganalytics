@@ -25,8 +25,8 @@ _Opps Google Analytics Application_
 
 ## Settings var
 
-* OPPS_GANALYTICS_CLIENT_ACCOUNT - _Generated email by [service account](https://developers.google.com/identity/protocols/OAuth2ServiceAccount) credencial. (example: @developer.gserviceaccount.com)_
-* OPPS_GANALYTICS_CLIENT_PRIVATE_KEY - _path to .pem key, converted from service account .p12 key, [see more.](http://stackoverflow.com/questions/17993604/signedjwtassertioncredentials-on-appengine-doesnt-recognize-pem-key)_
+* OPPS_GANALYTICS_ACCOUNT - _Generated email by [service account](https://developers.google.com/identity/protocols/OAuth2ServiceAccount) credencial. (example: @developer.gserviceaccount.com)_
+* OPPS_GANALYTICS_PRIVATE_KEY - _path to .pem key, converted from service account .p12 key, [see more.](http://stackoverflow.com/questions/17993604/signedjwtassertioncredentials-on-appengine-doesnt-recognize-pem-key)_
 
 
 ## Task
