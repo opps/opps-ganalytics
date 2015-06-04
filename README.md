@@ -20,14 +20,13 @@ _Opps Google Analytics Application_
 
 * opps
 * django-celery
-* [python-googleanalytics](http://github.com/avelino/python-googleanalytics)
+* google-api-python-client
 
 
 ## Settings var
 
-* OPPS_GANALYTICS_ACCOUNT - _Valid email Google (example: @gmail.com)_
-* OPPS_GANALYTICS_PASSWORD - _Account password_
-* OPPS_GANALYTICS_APIKEY - _Get APIKEY on [Google API Console](https://code.google.com/apis/console/)_
+* OPPS_GANALYTICS_CLIENT_ACCOUNT - _Generated email by [service account](https://developers.google.com/identity/protocols/OAuth2ServiceAccount) credencial. (example: @developer.gserviceaccount.com)_
+* OPPS_GANALYTICS_CLIENT_PRIVATE_KEY - _path to .pem key, converted from service account .p12 key, [see more.](http://stackoverflow.com/questions/17993604/signedjwtassertioncredentials-on-appengine-doesnt-recognize-pem-key)_
 
 
 ## Task
