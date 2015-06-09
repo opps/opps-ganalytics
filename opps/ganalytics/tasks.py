@@ -56,7 +56,8 @@ def get_accounts():
 
             # Create account/profile if not exists.
             obj, create = Account.objects.get_or_create(
-                account_id=a['id'], profile_id=p['id'])
+                account_id=a['id'], profile_id=p['id'],
+                defaults={'account_name': a['name'], 'title': p['name']})
 
             # Update their titles
             if not create:
