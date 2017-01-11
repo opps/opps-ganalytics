@@ -1,5 +1,5 @@
 opps
 google-api-python-client==1.4.0
-pyOpenSSL==0.15.1
+pyOpenSSL==16.2.0
 oauth2client==1.5.2
-cryptography==1.4
+cryptography==1.7.1
