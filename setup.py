@@ -24,7 +24,7 @@ except:
 
 setup(
     name='opps-ganalytics',
-    namespace_packages=['opps', 'opps.ganalytics'],
+    namespace_packages=['opps'],
     version=ganalytics.__version__,
     description=ganalytics.__description__,
     long_description=long_description,
