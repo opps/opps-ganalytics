@@ -10,7 +10,7 @@ from appconf import AppConf
 from opps.core.models import Publishable, Date
 from opps.containers.models import Container
 
-from .utils import process_filters, FILTER_OPERATORS
+from opps.ganalytics.utils import process_filters, FILTER_OPERATORS
 
 
 FIELDS_FILTER = ['pageviews', 'pagePath']

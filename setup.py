@@ -34,5 +34,6 @@ setup(
     author_email=ganalytics.__email__,
     packages=find_packages(exclude=('doc', 'docs',)),
     install_requires=install_requires,
+    package_dir={'opps': 'opps'},
     include_package_data=True
 )
