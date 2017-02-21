@@ -2,10 +2,10 @@
 # -*- coding:utf-8 -*-
 
 from setuptools import setup, find_packages
-
 from opps import ganalytics
 
-install_requires = ["opps", "django-celery", "google-api-python-client"]
+
+install_requires = [i.strip() for i in open("requirements.txt").readlines()]
 
 classifiers = ["Development Status :: 4 - Beta",
                "Intended Audience :: Developers",
