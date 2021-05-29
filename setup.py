@@ -7,15 +7,16 @@ from opps import ganalytics
 
 install_requires = [i.strip() for i in open("requirements.txt").readlines()]
 
-classifiers = ["Development Status :: 4 - Beta",
-               "Intended Audience :: Developers",
-               "Operating System :: OS Independent",
-               "Framework :: Django",
-               'Programming Language :: Python',
-               "Programming Language :: Python :: 2.7",
-               "Operating System :: OS Independent",
-               "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
-               'Topic :: Software Development :: Libraries :: Python Modules']
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Framework :: Django",
+    'Programming Language :: Python',
+    "Programming Language :: Python :: 2.7",
+    "Operating System :: OS Independent",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    'Topic :: Software Development :: Libraries :: Python Modules']
 
 try:
     long_description = open('README.md').read()
@@ -28,6 +29,7 @@ setup(
     version=ganalytics.__version__,
     description=ganalytics.__description__,
     long_description=long_description,
+    long_description_content_type='text/markdown',
     classifiers=classifiers,
     keywords='google analytics top read',
     author=ganalytics.__author__,
