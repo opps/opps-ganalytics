@@ -3,20 +3,19 @@
 from __future__ import unicode_literals
 
 import datetime
-from urlparse import urlparse
-from httplib2 import Http
 
-from django.utils import timezone
-from django.db import transaction
-from django.contrib.sites.models import Site
-
+from apiclient.discovery import build
 from celery.decorators import periodic_task
 from celery.task.schedules import crontab
+from django.contrib.sites.models import Site
+from django.db import transaction
+from django.utils import timezone
+from httplib2 import Http
 from oauth2client.client import SignedJwtAssertionCredentials
-from apiclient.discovery import build
+from urlparse import urlparse
 
-from .models import Query, QueryFilter, Report, Account
 from .conf import settings
+from .models import Account, Query, Report
 
 
 def ga_factory():
@@ -127,7 +126,8 @@ def get_metadata(self, verbose=False):
 
             count_data = data['totalResults']
 
-        TITLE, URL, PAGEVIEWS, TIMEONPAGE, ENTRANCES = 0, 1, 2, 3, 4
+        # TITLE = 0
+        URL, PAGEVIEWS, TIMEONPAGE, ENTRANCES = 1, 2, 3, 4
 
         for row in data.get('rows', []):
             url = row[URL][:255]

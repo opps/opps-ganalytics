@@ -1,17 +1,12 @@
 # -*- coding: utf-8 -*-
-from urlparse import urlparse
-
-from django.utils.translation import ugettext_lazy as _
-from django.db import models
-from django.contrib.redirects.models import Redirect
-
 from appconf import AppConf
-
-from opps.core.models import Publishable, Date
+from django.contrib.redirects.models import Redirect
+from django.db import models
+from django.utils.translation import ugettext_lazy as _
 from opps.containers.models import Container
-
-from opps.ganalytics.utils import process_filters, FILTER_OPERATORS
-
+from opps.core.models import Date, Publishable
+from opps.ganalytics.utils import FILTER_OPERATORS, process_filters
+from urlparse import urlparse
 
 FIELDS_FILTER = ['pageviews', 'pagePath']
 
@@ -123,7 +118,8 @@ class Report(Date):
         on_delete=models.SET_NULL
     )
 
-    __unicode__ = lambda self: "{} -> {}".format(self.url, self.container)
+    def __unicode__(self):
+        return "{} -> {}".format(self.url, self.container)
 
     def _find_redirects(self, key):
         """
