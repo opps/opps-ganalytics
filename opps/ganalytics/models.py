@@ -118,7 +118,8 @@ class Report(Date):
         on_delete=models.SET_NULL
     )
 
-    def __unicode__(self): return "{} -> {}".format(self.url, self.container)
+    def __unicode__(self):
+        return "{} -> {}".format(self.url, self.container)
 
     def _find_redirects(self, key):
         """

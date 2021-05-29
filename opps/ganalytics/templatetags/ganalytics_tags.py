@@ -66,7 +66,7 @@ def get_top_read(
         'number': number,
         'context': context}))
 
-    cache.set(cachekey, render, settings.OPPS_CACHE_EXPIRE*60)
+    cache.set(cachekey, render, settings.OPPS_CACHE_EXPIRE * 60)
 
     return render
 
@@ -108,7 +108,7 @@ def get_channels_top_read(context, *channels, **kwargs):
     for top in top_read:
         container = Container.objects.get(pk=top['container'])
         top['container'] = container
-        if not container.channel_long_slug in tops:
+        if container.channel_long_slug not in tops:
             tops[container.channel_long_slug] = top
 
     ordered = OrderedDict(
@@ -120,9 +120,8 @@ def get_channels_top_read(context, *channels, **kwargs):
     t = template.loader.get_template(template_name)
 
     render = t.render(template.Context(
-        {'top_read': ordered,
-         'context': context}))
+        {'top_read': ordered, 'context': context}))
 
-    cache.set(cachekey, render, settings.OPPS_CACHE_EXPIRE*60)
+    cache.set(cachekey, render, settings.OPPS_CACHE_EXPIRE * 60)
 
     return render
