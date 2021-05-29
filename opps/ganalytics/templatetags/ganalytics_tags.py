@@ -3,20 +3,19 @@ from collections import OrderedDict
 
 from django import template
 from django.conf import settings
+from django.core.cache import cache
 from django.db.models import Sum
 from django.utils import timezone
-from django.core.cache import cache
-
-from opps.ganalytics.models import Report
 from opps.containers.models import Container
-
+from opps.ganalytics.models import Report
 
 register = template.Library()
 
 
 @register.simple_tag(takes_context=True)
-def get_top_read(context, number=10, channel_slug=None, child_class=None,
-                 template_name='ganalytics/top_read.html'):
+def get_top_read(
+        context, number=10, channel_slug=None, child_class=None,
+        template_name='ganalytics/top_read.html'):
 
     request = context['request']
     is_mobile = getattr(request, 'is_mobile', False)
@@ -74,8 +73,8 @@ def get_top_read(context, number=10, channel_slug=None, child_class=None,
 
 @register.simple_tag(takes_context=True)
 def get_channels_top_read(context, *channels, **kwargs):
-    template_name = kwargs.get('template_name',
-                               'ganalytics/channel_top_read.html')
+    template_name = kwargs.get(
+        'template_name', 'ganalytics/channel_top_read.html')
 
     request = context['request']
     is_mobile = getattr(request, 'is_mobile', False)
@@ -105,7 +104,7 @@ def get_channels_top_read(context, *channels, **kwargs):
     ).annotate(Sum('pageview'))
     tops = {}
 
-    #get one from each channel
+    # get one from each channel
     for top in top_read:
         container = Container.objects.get(pk=top['container'])
         top['container'] = container
@@ -113,9 +112,10 @@ def get_channels_top_read(context, *channels, **kwargs):
             tops[container.channel_long_slug] = top
 
     ordered = OrderedDict(
-        sorted(tops.items(),
-               key=lambda item: item[1]['pageview__sum'],
-               reverse=True)
+        sorted(
+            tops.items(),
+            key=lambda item: item[1]['pageview__sum'],
+            reverse=True)
     )
     t = template.loader.get_template(template_name)
 
