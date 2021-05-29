@@ -4,7 +4,6 @@ import sys
 from django.conf import settings
 from django.core.management import execute_from_command_line
 
-
 if not settings.configured:
     settings.configure(
         DATABASES={
@@ -41,10 +40,10 @@ if not settings.configured:
             'opps.ganalytics',
 
         ),
-        SITE_ID = 1,
-        ROOT_URLCONF = "opps.urls",
-        TEST_RUNNER = 'django_coverage.coverage_runner.CoverageRunner',
-        HAYSTACK_CONNECTIONS = {
+        SITE_ID=1,
+        ROOT_URLCONF="opps.urls",
+        TEST_RUNNER='django_coverage.coverage_runner.CoverageRunner',
+        HAYSTACK_CONNECTIONS={
             'default': {
                 'ENGINE': 'haystack.backends.simple_backend.SimpleEngine'
             }

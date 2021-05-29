@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 
-from setuptools import setup, find_packages
-from opps import ganalytics
+from setuptools import find_packages, setup
 
+from opps import ganalytics
 
 install_requires = [i.strip() for i in open("requirements.txt").readlines()]
 
@@ -19,7 +19,7 @@ classifiers = ["Development Status :: 4 - Beta",
 
 try:
     long_description = open('README.md').read()
-except:
+except IOError:
     long_description = ganalytics.__description__
 
 setup(
