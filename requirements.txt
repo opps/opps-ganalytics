@@ -1,5 +1,5 @@
 opps
-rsa==4.5 # python 2 support
+rsa==4.7 # python 2 support
 google-api-python-client==1.4.0
 pyOpenSSL==16.2.0
 oauth2client==1.5.2
