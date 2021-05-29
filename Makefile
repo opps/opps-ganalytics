@@ -20,7 +20,9 @@ pep8:
 
 .PHONY: sdist
 sdist: test
-	@python setup.py sdist upload
+	@python -m build --sdist
+	@twine check dist/*
+	@twine upload dist/*
 
 .PHONY: clean
 clean:
